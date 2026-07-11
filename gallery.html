@@ -1,0 +1,169 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gallery · Wilderness</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100%; height: 100%; overflow-x: hidden; background: #0a0f0d; font-family: 'Inter', sans-serif; }
+  canvas { display: block; position: fixed; top: 0; left: 0; z-index: 0; }
+
+  .nav-bar {
+    position: fixed; top: 24px; left: 50%; transform: translateX(-50%);
+    z-index: 100; background: rgba(10, 15, 12, 0.55);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 40px; padding: 10px 28px;
+    display: flex; gap: 4px; align-items: center;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+  .nav-bar a {
+    color: rgba(255,255,255,0.6); text-decoration: none;
+    font-size: 11px; font-weight: 400; letter-spacing: 2px;
+    text-transform: uppercase; padding: 8px 16px; border-radius: 24px;
+    transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+  }
+  .nav-bar a:hover, .nav-bar a.active {
+    color: rgba(255,255,255,0.95); background: rgba(255,255,255,0.08);
+  }
+  .nav-bar a.active { font-weight: 500; }
+
+  .page-container {
+    position: relative; z-index: 10; max-width: 1200px; margin: 0 auto;
+    padding: 120px 40px 60px; pointer-events: none;
+  }
+  .page-container > * { pointer-events: auto; }
+
+  .page-header { text-align: center; margin-bottom: 60px; }
+  .page-header h1 {
+    font-family: 'Playfair Display', serif; font-size: clamp(28px, 4vw, 48px);
+    font-weight: 400; color: rgba(255,255,255,0.9); letter-spacing: 4px;
+  }
+  .page-header .line { width: 50px; height: 1px; background: rgba(255,255,255,0.25); margin: 16px auto; }
+  .page-header p { font-size: 12px; letter-spacing: 3px; color: rgba(255,255,255,0.4); text-transform: uppercase; }
+
+  .gallery-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px; padding: 0 20px;
+  }
+  .gallery-card {
+    position: relative; border-radius: 16px; overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.06);
+    background: rgba(15, 20, 16, 0.5);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    cursor: pointer; transition: all 0.45s cubic-bezier(0.4,0,0.2,1);
+    aspect-ratio: 4/3;
+  }
+  .gallery-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1);
+  }
+  .gallery-card img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    transition: transform 0.6s cubic-bezier(0.4,0,0.2,1);
+  }
+  .gallery-card:hover img { transform: scale(1.05); }
+  .gallery-card .card-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%);
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 20px; opacity: 0; transition: opacity 0.4s;
+  }
+  .gallery-card:hover .card-overlay { opacity: 1; }
+  .card-overlay .card-title {
+    font-size: 15px; font-weight: 500; color: #fff; letter-spacing: 1px;
+  }
+  .card-overlay .card-sub {
+    font-size: 11px; color: rgba(255,255,255,0.6); letter-spacing: 2px;
+    text-transform: uppercase; margin-top: 4px;
+  }
+
+  /* Lightbox */
+  .lightbox {
+    position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.9);
+    display: none; align-items: center; justify-content: center;
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  }
+  .lightbox.active { display: flex; }
+  .lightbox img { max-width: 90vw; max-height: 85vh; border-radius: 8px; box-shadow: 0 20px 80px rgba(0,0,0,0.6); }
+  .lightbox-close {
+    position: absolute; top: 30px; right: 40px;
+    color: rgba(255,255,255,0.7); font-size: 32px; cursor: pointer;
+    background: none; border: none; transition: color 0.3s;
+  }
+  .lightbox-close:hover { color: #fff; }
+  .lightbox-caption {
+    position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+    color: rgba(255,255,255,0.5); font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+
+<nav class="nav-bar">
+  <a href="index.html">Home</a>
+  <a href="gallery.html" class="active">Gallery</a>
+  <a href="journal.html">Journal</a>
+  <a href="sounds.html">Sounds</a>
+  <a href="explore.html">Explore</a>
+  <a href="about.html">About</a>
+</nav>
+
+<div class="page-container">
+  <div class="page-header">
+    <h1>Forest Gallery</h1>
+    <div class="line"></div>
+    <p>Moments captured in the wild</p>
+  </div>
+
+  <div class="gallery-grid" id="galleryGrid"></div>
+</div>
+
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+  <img id="lightboxImg" src="" alt="">
+  <span class="lightbox-caption" id="lightboxCaption"></span>
+</div>
+
+<script>
+  const images = [
+    { src: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600', title: 'Forest Light', sub: 'Sunbeams' },
+    { src: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=600', title: 'Misty Valley', sub: 'Morning Fog' },
+    { src: 'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=600', title: 'Woodland Path', sub: 'Autumn Trail' },
+    { src: 'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=600', title: 'Mountain Lake', sub: 'Reflection' },
+    { src: 'https://images.unsplash.com/photo-1518173946687-a1e4e3e6a4b0?w=600', title: 'Dense Canopy', sub: 'Overhead' },
+    { src: 'https://images.unsplash.com/photo-1511497584788-876760111969?w=600', title: 'Pine Forest', sub: 'Evergreens' },
+    { src: 'https://images.unsplash.com/photo-1472396961693-142e6e269027?w=600', title: 'Deer Meadow', sub: 'Wildlife' },
+    { src: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600', title: 'Ocean Shore', sub: 'Coastline' },
+    { src: 'https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?w=600', title: 'Wildflowers', sub: 'Spring Bloom' },
+  ];
+
+  const grid = document.getElementById('galleryGrid');
+  images.forEach(img => {
+    const card = document.createElement('div');
+    card.className = 'gallery-card';
+    card.innerHTML = `<img src="${img.src}" alt="${img.title}" loading="lazy">
+      <div class="card-overlay"><span class="card-title">${img.title}</span><span class="card-sub">${img.sub}</span></div>`;
+    card.onclick = () => openLightbox(img);
+    grid.appendChild(card);
+  });
+
+  function openLightbox(img) {
+    document.getElementById('lightboxImg').src = img.src.replace('w=600', 'w=1400');
+    document.getElementById('lightboxCaption').textContent = img.title + ' · ' + img.sub;
+    document.getElementById('lightbox').classList.add('active');
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+  }
+  document.getElementById('lightbox').addEventListener('click', function(e) {
+    if (e.target === this) closeLightbox();
+  });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+</script>
+<script src="forest-engine.js"></script>
+</body>
+</html>

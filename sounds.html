@@ -1,0 +1,210 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sounds · Wilderness</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100%; height: 100%; overflow-x: hidden; background: #0a0f0d; font-family: 'Inter', sans-serif; }
+  canvas { display: block; position: fixed; top: 0; left: 0; z-index: 0; }
+
+  .nav-bar {
+    position: fixed; top: 24px; left: 50%; transform: translateX(-50%);
+    z-index: 100; background: rgba(10, 15, 12, 0.55);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 40px; padding: 10px 28px;
+    display: flex; gap: 4px; align-items: center;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+  .nav-bar a {
+    color: rgba(255,255,255,0.6); text-decoration: none;
+    font-size: 11px; font-weight: 400; letter-spacing: 2px;
+    text-transform: uppercase; padding: 8px 16px; border-radius: 24px;
+    transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+  }
+  .nav-bar a:hover, .nav-bar a.active {
+    color: rgba(255,255,255,0.95); background: rgba(255,255,255,0.08);
+  }
+  .nav-bar a.active { font-weight: 500; }
+
+  .page-container {
+    position: relative; z-index: 10; max-width: 1000px; margin: 0 auto;
+    padding: 120px 40px 80px; pointer-events: none;
+  }
+  .page-container > * { pointer-events: auto; }
+
+  .page-header { text-align: center; margin-bottom: 60px; }
+  .page-header h1 {
+    font-family: 'Playfair Display', serif; font-size: clamp(28px, 4vw, 48px);
+    font-weight: 400; color: rgba(255,255,255,0.9); letter-spacing: 4px;
+  }
+  .page-header .line { width: 50px; height: 1px; background: rgba(255,255,255,0.25); margin: 16px auto; }
+  .page-header p { font-size: 12px; letter-spacing: 3px; color: rgba(255,255,255,0.4); text-transform: uppercase; }
+
+  .sounds-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+  }
+  .sound-card {
+    background: rgba(15, 20, 18, 0.45); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.06); border-radius: 20px;
+    padding: 28px 20px; text-align: center; cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+    position: relative; overflow: hidden;
+  }
+  .sound-card:hover {
+    border-color: rgba(255,255,255,0.12);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+    transform: translateY(-4px);
+  }
+  .sound-card.playing {
+    border-color: rgba(140, 200, 120, 0.3);
+    box-shadow: 0 0 30px rgba(100, 180, 80, 0.1);
+  }
+  .sound-icon { font-size: 36px; margin-bottom: 12px; display: block; }
+  .sound-name { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.8); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+  .sound-desc { font-size: 10px; color: rgba(255,255,255,0.35); letter-spacing: 1px; }
+  .sound-pulse {
+    position: absolute; top: 50%; left: 50%; width: 0; height: 0;
+    border-radius: 50%; background: rgba(140,200,120,0.15);
+    transform: translate(-50%, -50%); transition: all 0.6s ease-out;
+    pointer-events: none;
+  }
+  .sound-card.playing .sound-pulse {
+    width: 300px; height: 300px; opacity: 0;
+    animation: pulseExpand 2s ease-out infinite;
+  }
+  @keyframes pulseExpand {
+    0% { width: 0; height: 0; opacity: 0.4; }
+    100% { width: 280px; height: 280px; opacity: 0; }
+  }
+
+  .master-control {
+    text-align: center; margin-bottom: 40px;
+  }
+  .volume-slider {
+    -webkit-appearance: none; appearance: none; width: 200px; height: 2px;
+    background: rgba(255,255,255,0.15); border-radius: 1px; outline: none; cursor: pointer;
+  }
+  .volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%;
+    background: rgba(255,255,255,0.8); cursor: pointer; border: none;
+  }
+  .master-label {
+    font-size: 10px; letter-spacing: 2px; color: rgba(255,255,255,0.35);
+    text-transform: uppercase; margin-bottom: 12px; display: block;
+  }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+
+<nav class="nav-bar">
+  <a href="index.html">Home</a>
+  <a href="gallery.html">Gallery</a>
+  <a href="journal.html">Journal</a>
+  <a href="sounds.html" class="active">Sounds</a>
+  <a href="explore.html">Explore</a>
+  <a href="about.html">About</a>
+</nav>
+
+<div class="page-container">
+  <div class="page-header">
+    <h1>Ambient Sounds</h1>
+    <div class="line"></div>
+    <p>Immerse yourself in nature''s symphony</p>
+  </div>
+
+  <div class="master-control">
+    <span class="master-label">Master Volume</span>
+    <input type="range" class="volume-slider" id="masterVolume" min="0" max="100" value="50" oninput="setMasterVolume(this.value)">
+  </div>
+
+<div class="sounds-grid" id="soundsGrid"></div>
+</div>
+
+<script>
+  const soundScapes = [
+    { icon: '🌧️', name: 'Rainfall', desc: 'Gentle forest rain', color: '#6a8aaa' },
+    { icon: '🦉', name: 'Night', desc: 'Owls & crickets', color: '#4a5a8a' },
+    { icon: '🐦', name: 'Dawn', desc: 'Morning birdsong', color: '#8a9a6a' },
+    { icon: '💧', name: 'Stream', desc: 'Flowing water', color: '#6a9aaa' },
+    { icon: '🌬️', name: 'Wind', desc: 'Through the pines', color: '#7a8a7a' },
+    { icon: '🔥', name: 'Campfire', desc: 'Crackling warmth', color: '#aa7a4a' },
+    { icon: '🍃', name: 'Leaves', desc: 'Rustling canopy', color: '#6a8a5a' },
+    { icon: '⛈️', name: 'Thunder', desc: 'Distant storm', color: '#5a5a7a' },
+  ];
+
+  let masterVol = 0.5;
+  let activeCard = null;
+  let audioCtx = null;
+  let noiseNode = null;
+  let gainNode = null;
+
+  function setMasterVolume(val) { masterVol = val / 100; if (gainNode) gainNode.gain.setValueAtTime(masterVol, audioCtx.currentTime); }
+
+  const grid = document.getElementById('soundsGrid');
+  soundScapes.forEach((s, i) => {
+    const card = document.createElement('div');
+    card.className = 'sound-card';
+    card.innerHTML = `<div class="sound-pulse"></div><span class="sound-icon">${s.icon}</span><div class="sound-name">${s.name}</div><div class="sound-desc">${s.desc}</div>`;
+    card.style.setProperty('--accent', s.color);
+    card.onclick = () => toggleSound(card, i);
+    grid.appendChild(card);
+  });
+
+  function toggleSound(card, index) {
+    if (activeCard === card) {
+      stopSound(); activeCard = null;
+      card.classList.remove('playing');
+      return;
+    }
+    if (activeCard) activeCard.classList.remove('playing');
+    activeCard = card; card.classList.add('playing');
+    playSound(index);
+  }
+
+  function playSound(type) {
+    stopSound();
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    gainNode = audioCtx.createGain();
+    gainNode.gain.setValueAtTime(masterVol, audioCtx.currentTime);
+    gainNode.connect(audioCtx.destination);
+
+    const buffers = { length: 2 * audioCtx.sampleRate, sampleRate: audioCtx.sampleRate };
+    const buffer = audioCtx.createBuffer(1, buffers.length, buffers.sampleRate);
+    const data = buffer.getChannelData(0);
+
+    for (let i = 0; i < buffers.length; i++) {
+      let sample = (Math.random() * 2 - 1) * 0.08;
+      const t = i / buffers.sampleRate;
+
+      switch(type) {
+        case 0: sample *= 0.6 + 0.4 * Math.sin(t * 3.7) * Math.sin(t * 1.1); break;
+        case 1: sample *= 0.3; sample += Math.sin(t * 420) * 0.005; break;
+        case 2: sample *= 0.25; sample += Math.sin(t * (800 + Math.sin(t*0.3)*200)) * 0.003 * (0.5+0.5*Math.sin(t*0.1)); break;
+        case 3: sample = (Math.random()*2-1)*0.04 * (0.7 + 0.3*Math.sin(t*2.3)); break;
+        case 4: sample = (Math.random()*2-1)*0.06; sample *= 0.3+0.7*Math.abs(Math.sin(t*0.6)); break;
+        case 5: sample = (Math.random()*2-1)*0.1; sample *= Math.abs(Math.sin(t*8+Math.random()*0.5)) > 0.85 ? 1 : 0.05; break;
+        case 6: sample *= 0.4 + 0.6 * Math.sin(t * 5.1) * Math.sin(t * 1.8); break;
+        case 7: sample *= 0.3; sample += (Math.random()*2-1) * 0.15 * (Math.sin(t*0.15) > 0.9 ? 1 : 0.01); break;
+      }
+      data[i] = sample;
+    }
+
+    noiseNode = audioCtx.createBufferSource();
+    noiseNode.buffer = buffer; noiseNode.loop = true;
+    noiseNode.connect(gainNode); noiseNode.start();
+  }
+
+  function stopSound() {
+    if (noiseNode) { try { noiseNode.stop(); } catch(e) {} noiseNode = null; }
+    if (audioCtx) { audioCtx.close().catch(()=>{}); audioCtx = null; }
+  }
+</script>
+<script src="forest-engine.js"></script>
+</body>
+</html>

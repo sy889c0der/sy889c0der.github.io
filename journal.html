@@ -1,0 +1,156 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Journal · Wilderness</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100%; height: 100%; overflow-x: hidden; background: #0a0f0d; font-family: 'Inter', sans-serif; }
+  canvas { display: block; position: fixed; top: 0; left: 0; z-index: 0; }
+
+  .nav-bar {
+    position: fixed; top: 24px; left: 50%; transform: translateX(-50%);
+    z-index: 100; background: rgba(10, 15, 12, 0.55);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 40px; padding: 10px 28px;
+    display: flex; gap: 4px; align-items: center;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+  .nav-bar a {
+    color: rgba(255,255,255,0.6); text-decoration: none;
+    font-size: 11px; font-weight: 400; letter-spacing: 2px;
+    text-transform: uppercase; padding: 8px 16px; border-radius: 24px;
+    transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+  }
+  .nav-bar a:hover, .nav-bar a.active {
+    color: rgba(255,255,255,0.95); background: rgba(255,255,255,0.08);
+  }
+  .nav-bar a.active { font-weight: 500; }
+
+  .page-container {
+    position: relative; z-index: 10; max-width: 800px; margin: 0 auto;
+    padding: 120px 40px 80px; pointer-events: none;
+  }
+  .page-container > * { pointer-events: auto; }
+
+  .page-header { text-align: center; margin-bottom: 60px; }
+  .page-header h1 {
+    font-family: 'Playfair Display', serif; font-size: clamp(28px, 4vw, 48px);
+    font-weight: 400; color: rgba(255,255,255,0.9); letter-spacing: 4px;
+  }
+  .page-header .line { width: 50px; height: 1px; background: rgba(255,255,255,0.25); margin: 16px auto; }
+  .page-header p { font-size: 12px; letter-spacing: 3px; color: rgba(255,255,255,0.4); text-transform: uppercase; }
+
+  .journal-entry {
+    background: rgba(15, 20, 18, 0.45); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.06); border-radius: 20px;
+    padding: 36px; margin-bottom: 24px;
+    transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+    cursor: default;
+  }
+  .journal-entry:hover {
+    border-color: rgba(255,255,255,0.12);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+    transform: translateX(6px);
+  }
+  .entry-meta {
+    display: flex; align-items: center; gap: 16px; margin-bottom: 16px;
+    font-size: 10px; letter-spacing: 2px; color: rgba(255,255,255,0.35); text-transform: uppercase;
+  }
+  .entry-meta .dot { width: 4px; height: 4px; border-radius: 50%; background: rgba(255,255,255,0.2); }
+  .entry-meta .tag {
+    background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 12px;
+    font-size: 9px; letter-spacing: 1px;
+  }
+  .entry-title {
+    font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 400;
+    color: rgba(255,255,255,0.85); margin-bottom: 12px; letter-spacing: 1px;
+  }
+  .entry-excerpt {
+    font-size: 14px; line-height: 1.8; color: rgba(255,255,255,0.45);
+    font-weight: 300;
+  }
+  .entry-readmore {
+    display: inline-block; margin-top: 16px; font-size: 10px; letter-spacing: 2px;
+    color: rgba(255,255,255,0.4); text-transform: uppercase; cursor: pointer;
+    transition: color 0.3s;
+  }
+  .entry-readmore:hover { color: rgba(255,255,255,0.75); }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+
+<nav class="nav-bar">
+  <a href="index.html">Home</a>
+  <a href="gallery.html">Gallery</a>
+  <a href="journal.html" class="active">Journal</a>
+  <a href="sounds.html">Sounds</a>
+  <a href="explore.html">Explore</a>
+  <a href="about.html">About</a>
+</nav>
+
+<div class="page-container">
+  <div class="page-header">
+    <h1>Nature Journal</h1>
+    <div class="line"></div>
+    <p>Notes from the wilderness</p>
+  </div>
+
+  <div class="journal-entry">
+    <div class="entry-meta">
+      <span>June 28, 2026</span><span class="dot"></span><span>4 min read</span>
+      <span class="tag">Observation</span>
+    </div>
+    <h2 class="entry-title">The Language of Trees</h2>
+    <p class="entry-excerpt">Beneath the forest floor, an intricate network of fungal mycelium connects trees in a vast underground communication system. Scientists call it the "Wood Wide Web" — a symbiosis that allows trees to share nutrients, warn each other of danger, and even nurture their young.</p>
+    <span class="entry-readmore">Read More &rarr;</span>
+  </div>
+
+  <div class="journal-entry">
+    <div class="entry-meta">
+      <span>May 14, 2026</span><span class="dot"></span><span>6 min read</span>
+      <span class="tag">Reflection</span>
+    </div>
+    <h2 class="entry-title">Dawn Chorus: Why Birds Sing at First Light</h2>
+    <p class="entry-excerpt">There is a sacred window each morning, just before sunrise, when the forest erupts into song. The dawn chorus is not merely beautiful — it is a complex negotiation of territory, partnership, and survival that has evolved over millions of years.</p>
+    <span class="entry-readmore">Read More &rarr;</span>
+  </div>
+
+  <div class="journal-entry">
+    <div class="entry-meta">
+      <span>April 3, 2026</span><span class="dot"></span><span>3 min read</span>
+      <span class="tag">Discovery</span>
+    </div>
+    <h2 class="entry-title">The Oldest Living Things</h2>
+    <p class="entry-excerpt">High in the White Mountains of California, a bristlecone pine named Methuselah has been alive for over 4,800 years. It was ancient before the pyramids were built. Standing beside it, one feels the weight of deep time.</p>
+    <span class="entry-readmore">Read More &rarr;</span>
+  </div>
+
+  <div class="journal-entry">
+    <div class="entry-meta">
+      <span>March 19, 2026</span><span class="dot"></span><span>5 min read</span>
+      <span class="tag">Guide</span>
+    </div>
+    <h2 class="entry-title">A Beginner's Guide to Forest Bathing</h2>
+    <p class="entry-excerpt">Shinrin-yoku, the Japanese practice of forest bathing, is not about exercise or hiking. It is about presence — opening all five senses to the forest. Research shows it lowers cortisol, boosts immunity, and improves mood within just 20 minutes.</p>
+    <span class="entry-readmore">Read More &rarr;</span>
+  </div>
+
+  <div class="journal-entry">
+    <div class="entry-meta">
+      <span>February 8, 2026</span><span class="dot"></span><span>7 min read</span>
+      <span class="tag">Photo Essay</span>
+    </div>
+    <h2 class="entry-title">Winter Solitude: A Walk Through Snow-Covered Pines</h2>
+    <p class="entry-excerpt">There is a particular stillness that comes only with snow. Sound is muffled, light is soft, and the forest takes on an almost cathedral-like quality. This is my account of a solitary winter trek through the backcountry.</p>
+    <span class="entry-readmore">Read More &rarr;</span>
+  </div>
+</div>
+
+<script src="forest-engine.js"></script>
+</body>
+</html>

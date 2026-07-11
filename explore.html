@@ -1,0 +1,160 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Explore · Wilderness</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100%; height: 100%; overflow: hidden; background: #0a0f0d; font-family: 'Inter', sans-serif; }
+  canvas { display: block; position: fixed; top: 0; left: 0; z-index: 0; }
+
+  .nav-bar {
+    position: fixed; top: 24px; left: 50%; transform: translateX(-50%);
+    z-index: 100; background: rgba(10, 15, 12, 0.55);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 40px; padding: 10px 28px;
+    display: flex; gap: 4px; align-items: center;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+  .nav-bar a {
+    color: rgba(255,255,255,0.6); text-decoration: none;
+    font-size: 11px; font-weight: 400; letter-spacing: 2px;
+    text-transform: uppercase; padding: 8px 16px; border-radius: 24px;
+    transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+  }
+  .nav-bar a:hover, .nav-bar a.active {
+    color: rgba(255,255,255,0.95); background: rgba(255,255,255,0.08);
+  }
+  .nav-bar a.active { font-weight: 500; }
+
+  .hotspot {
+    position: fixed; z-index: 20; cursor: pointer; pointer-events: auto;
+    width: 28px; height: 28px;
+  }
+  .hotspot .dot {
+    width: 14px; height: 14px; border-radius: 50%;
+    background: rgba(255,255,255,0.7);
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    box-shadow: 0 0 20px rgba(255,255,200,0.5);
+    transition: all 0.3s;
+  }
+  .hotspot .ring {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 14px; height: 14px; border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.4);
+    animation: hotspotPulse 2s ease-out infinite;
+  }
+  .hotspot .ring:nth-child(3) { animation-delay: 1s; }
+  @keyframes hotspotPulse {
+    0% { width: 14px; height: 14px; opacity: 0.8; }
+    100% { width: 50px; height: 50px; opacity: 0; }
+  }
+  .hotspot:hover .dot {
+    background: rgba(255,255,255,0.95);
+    box-shadow: 0 0 30px rgba(255,255,200,0.8);
+    transform: translate(-50%, -50%) scale(1.3);
+  }
+  .hotspot .label {
+    position: absolute; top: -28px; left: 50%; transform: translateX(-50%);
+    font-size: 9px; letter-spacing: 2px; color: rgba(255,255,255,0.6);
+    text-transform: uppercase; white-space: nowrap;
+    opacity: 0; transition: all 0.3s; pointer-events: none;
+  }
+  .hotspot:hover .label { opacity: 1; top: -32px; }
+
+  /* Info drawer */
+  .info-drawer {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 30;
+    background: rgba(10, 15, 12, 0.75); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding: 32px 40px;
+    transform: translateY(100%); transition: transform 0.5s cubic-bezier(0.4,0,0.2,1);
+  }
+  .info-drawer.open { transform: translateY(0); }
+  .info-drawer .close-btn {
+    position: absolute; top: 16px; right: 24px;
+    background: none; border: none; color: rgba(255,255,255,0.5);
+    font-size: 20px; cursor: pointer; transition: color 0.3s;
+  }
+  .info-drawer .close-btn:hover { color: #fff; }
+  .info-drawer h3 {
+    font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 400;
+    color: rgba(255,255,255,0.85); margin-bottom: 8px; letter-spacing: 2px;
+  }
+  .info-drawer p {
+    font-size: 13px; line-height: 1.7; color: rgba(255,255,255,0.45);
+    font-weight: 300; max-width: 600px;
+  }
+
+  .page-title {
+    position: fixed; top: 110px; left: 50%; transform: translateX(-50%); z-index: 15;
+    font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 400;
+    color: rgba(255,255,255,0.55); letter-spacing: 4px; pointer-events: none;
+  }
+
+  .explore-hint {
+    position: fixed; bottom: 36px; left: 50%; transform: translateX(-50%); z-index: 15;
+    font-size: 10px; letter-spacing: 2px; color: rgba(255,255,255,0.3);
+    text-transform: uppercase; pointer-events: none;
+  }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+
+<nav class="nav-bar">
+  <a href="index.html">Home</a>
+  <a href="gallery.html">Gallery</a>
+  <a href="journal.html">Journal</a>
+  <a href="sounds.html">Sounds</a>
+  <a href="explore.html" class="active">Explore</a>
+  <a href="about.html">About</a>
+</nav>
+
+<div class="page-title">Click the glowing dots to explore</div>
+
+<!-- Hotspots placed at tree-relative positions on the canvas -->
+<div class="hotspot" style="left: 12%; top: 28%;" onclick="openDrawer('Canopy','The upper layer of the forest, formed by the crowns of the tallest trees. This is where most photosynthesis happens and where countless species of birds, insects, and mammals make their homes.')">
+  <span class="label">Canopy</span><span class="ring"></span><span class="ring"></span><span class="dot"></span>
+</div>
+<div class="hotspot" style="left: 28%; top: 45%;" onclick="openDrawer('Understory','The middle layer of the forest, home to smaller trees, shrubs, and young saplings waiting for their chance to reach the canopy. Dappled light filters through, creating a magical play of shadow and sun.')">
+  <span class="label">Understory</span><span class="ring"></span><span class="ring"></span><span class="dot"></span>
+</div>
+<div class="hotspot" style="left: 44%; top: 60%;" onclick="openDrawer('Forest Floor','The ground layer — rich with decomposing leaves, fungi, moss, and insects. This is the engine room of the forest, where nutrients are recycled and new life begins.')">
+  <span class="label">Forest Floor</span><span class="ring"></span><span class="ring"></span><span class="dot"></span>
+</div>
+<div class="hotspot" style="left: 58%; top: 35%;" onclick="openDrawer('Bird Nests','High in the branches, birds weave intricate nests from twigs, moss, and feathers. Some species return to the same tree year after year, generation after generation.')">
+  <span class="label">Bird Nests</span><span class="ring"></span><span class="ring"></span><span class="dot"></span>
+</div>
+<div class="hotspot" style="left: 72%; top: 50%;" onclick="openDrawer('Mycelium Network','Beneath your feet, a vast fungal network connects tree roots across the entire forest. Trees use this "Wood Wide Web" to share nutrients and warn each other of threats.')">
+  <span class="label">Mycelium</span><span class="ring"></span><span class="ring"></span><span class="dot"></span>
+</div>
+<div class="hotspot" style="left: 86%; top: 22%;" onclick="openDrawer('Sky Clearing','A break in the canopy where sunlight streams through unobstructed. These clearings are biodiversity hotspots — wildflowers, butterflies, and bees thrive in the direct sunlight.')">
+  <span class="label">Clearing</span><span class="ring"></span><span class="ring"></span><span class="dot"></span>
+</div>
+
+<div class="info-drawer" id="infoDrawer">
+  <button class="close-btn" onclick="closeDrawer()">&times;</button>
+  <h3 id="drawerTitle"></h3>
+  <p id="drawerContent"></p>
+</div>
+
+<div class="explore-hint">6 discoveries waiting</div>
+
+<script>
+  function openDrawer(title, content) {
+    document.getElementById('drawerTitle').textContent = title;
+    document.getElementById('drawerContent').textContent = content;
+    document.getElementById('infoDrawer').classList.add('open');
+  }
+  function closeDrawer() {
+    document.getElementById('infoDrawer').classList.remove('open');
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+</script>
+<script src="forest-engine.js"></script>
+</body>
+</html>

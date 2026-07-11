@@ -1,0 +1,147 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About · Wilderness</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100%; height: 100%; overflow-x: hidden; background: #0a0f0d; font-family: 'Inter', sans-serif; }
+  canvas { display: block; position: fixed; top: 0; left: 0; z-index: 0; }
+
+  .nav-bar {
+    position: fixed; top: 24px; left: 50%; transform: translateX(-50%);
+    z-index: 100; background: rgba(10, 15, 12, 0.55);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 40px; padding: 10px 28px;
+    display: flex; gap: 4px; align-items: center;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+  .nav-bar a {
+    color: rgba(255,255,255,0.6); text-decoration: none;
+    font-size: 11px; font-weight: 400; letter-spacing: 2px;
+    text-transform: uppercase; padding: 8px 16px; border-radius: 24px;
+    transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+  }
+  .nav-bar a:hover, .nav-bar a.active {
+    color: rgba(255,255,255,0.95); background: rgba(255,255,255,0.08);
+  }
+  .nav-bar a.active { font-weight: 500; }
+
+  .page-container {
+    position: relative; z-index: 10; max-width: 800px; margin: 0 auto;
+    padding: 120px 40px 80px; pointer-events: none;
+  }
+  .page-container > * { pointer-events: auto; }
+
+  .page-header { text-align: center; margin-bottom: 60px; }
+  .page-header h1 {
+    font-family: 'Playfair Display', serif; font-size: clamp(28px, 4vw, 48px);
+    font-weight: 400; color: rgba(255,255,255,0.9); letter-spacing: 4px;
+  }
+  .page-header .line { width: 50px; height: 1px; background: rgba(255,255,255,0.25); margin: 16px auto; }
+  .page-header p { font-size: 12px; letter-spacing: 3px; color: rgba(255,255,255,0.4); text-transform: uppercase; }
+
+  .stats-row {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 48px;
+  }
+  .stat-card {
+    background: rgba(15, 20, 18, 0.45); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.06); border-radius: 16px;
+    padding: 28px 16px; text-align: center;
+    transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+  }
+  .stat-card:hover {
+    border-color: rgba(255,255,255,0.12);
+    transform: translateY(-3px);
+  }
+  .stat-number {
+    font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 400;
+    color: rgba(255,255,255,0.85); margin-bottom: 6px;
+  }
+  .stat-label {
+    font-size: 10px; letter-spacing: 2px; color: rgba(255,255,255,0.35); text-transform: uppercase;
+  }
+
+  .about-section {
+    background: rgba(15, 20, 18, 0.45); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.06); border-radius: 20px;
+    padding: 40px; margin-bottom: 24px;
+  }
+  .about-section h2 {
+    font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 400;
+    color: rgba(255,255,255,0.85); margin-bottom: 20px; letter-spacing: 2px;
+  }
+  .about-section p {
+    font-size: 14px; line-height: 1.9; color: rgba(255,255,255,0.45); font-weight: 300;
+    margin-bottom: 16px;
+  }
+  .about-section p:last-child { margin-bottom: 0; }
+
+  .contact-link {
+    display: inline-block; color: rgba(180,220,160,0.6); text-decoration: none;
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    border-bottom: 1px solid rgba(180,220,160,0.2);
+    padding-bottom: 2px; transition: all 0.3s;
+  }
+  .contact-link:hover { color: rgba(180,220,160,0.9); border-color: rgba(180,220,160,0.5); }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+
+<nav class="nav-bar">
+  <a href="index.html">Home</a>
+  <a href="gallery.html">Gallery</a>
+  <a href="journal.html">Journal</a>
+  <a href="sounds.html">Sounds</a>
+  <a href="explore.html">Explore</a>
+  <a href="about.html" class="active">About</a>
+</nav>
+
+<div class="page-container">
+  <div class="page-header">
+    <h1>About Wilderness</h1>
+    <div class="line"></div>
+    <p>A digital sanctuary for nature lovers</p>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-number">8,400</div>
+      <div class="stat-label">Trees Planted</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">127</div>
+      <div class="stat-label">Species Documented</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">∞</div>
+      <div class="stat-label">Moments Shared</div>
+    </div>
+  </div>
+
+  <div class="about-section">
+    <h2>Our Philosophy</h2>
+    <p>Wilderness is more than a website — it is a living canvas, a digital forest that grows and breathes with every visitor. We believe that technology should not separate us from nature, but bring us closer to it.</p>
+    <p>Every leaf rendered, every firefly that dances across your screen, every bird that soars through the canopy is a small reminder: the wild world is not somewhere else — it is right here, waiting to be noticed.</p>
+  </div>
+
+  <div class="about-section">
+    <h2>Behind the Scenes</h2>
+    <p>This experience is built with pure HTML, CSS, and JavaScript — no frameworks, no heavy libraries. The forest is rendered in real-time on an HTML5 Canvas, with procedural generation for trees, particles, weather, and wildlife. It is designed to be lightweight, fast, and accessible on any device.</p>
+    <p>The sounds page uses the Web Audio API to generate ambient soundscapes procedurally, meaning no audio files need to be downloaded. Everything is created in your browser, in real time.</p>
+  </div>
+
+  <div class="about-section">
+    <h2>Get in Touch</h2>
+    <p>Have ideas for new features? Want to contribute? Or just want to share your own wilderness story?</p>
+    <a class="contact-link" href="mailto:hello@wilderness.digital">Email Us &rarr;</a>
+  </div>
+</div>
+
+<script src="forest-engine.js"></script>
+</body>
+</html>
