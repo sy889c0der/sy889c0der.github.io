@@ -1,4 +1,7 @@
-<!DOCTYPE html>
+<!D
+          </g>
+          </g>OCTYPE
+    transform:translate(var(--px,0),var(--py,0)); html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -13,7 +16,7 @@
   /* ============ HORIZONTAL SCROLL ============ */
   .app-container {
     position: fixed; inset: 0; z-index: 5;
-    overflow: hidden;
+    overflow-x: hidden;
     display: flex; flex-wrap: nowrap;
     scroll-snap-type: x mandatory; gap: 0;
   }
@@ -22,11 +25,11 @@
   .app-container::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
   .scroll-content {
     display: flex; flex-wrap: nowrap; gap: 0;
-    width: 100vw; min-width: 100vw; height: 100vh;
-    cursor: default;
+    width: 300vw; min-width: 300vw; height: 100vh;
+    cursor: grab; scroll-behavior: smooth;
   }
   .scroll-content.grabbing { cursor: grabbing; }
-  .panel { position:relative; z-index:5;
+  .panel {
     flex: 0 0 100vw; width: 100vw; min-width: 100vw; height: 100vh;
     flex-shrink: 0; box-sizing: border-box; margin: 0; padding: 0;
     scroll-snap-align: start; position: relative; overflow: hidden;
@@ -35,7 +38,7 @@
   /* ============ PANEL 1: LAYOUT ============ */
   .layout { position: relative; width: 100%; height: 100%; display: flex; flex-direction: row; pointer-events: none; }
   .layout > * { pointer-events: auto; }
-  #left-nav { position: fixed; left: 30px; top: 50%; transform: translateY(-50%); z-index: 999; pointer-events: auto; }
+  #left-nav { position: fixed; left: 30px; top: 50%; transform: translateY(-50%); z-index: 100; pointer-events: auto; }
   #right-content { width: 80%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
   /* ============ LEFT NAV DOTS ============ */
@@ -135,6 +138,228 @@
 
   
 
+/* ============ SCENE 2: DUSK REDESIGN ============ */
+  body.scene-2 .panel-2 { transition: background 0.8s ease;
+    background:
+      radial-gradient(ellipse 70% 50% at 50% 95%, rgba(255,200,100,0.12) 0%, transparent 55%),
+      radial-gradient(ellipse 50% 60% at 60% 50%, rgba(255,140,100,0.08) 0%, transparent 50%),
+      linear-gradient(180deg, #100b2e 0%, #1e1240 12%, #321d52 25%, #4a2a50 38%, #693a48 50%, #8c4c40 63%, #b4623a 75%, #d6803a 88%, #e8a848 96%, #ecc860 100%);
+  }
+  /* === FLOATING TYPOGRAPHY === */
+  .p2-typo { display: none; position: absolute; inset: 0; z-index: 6; pointer-events: none; }
+  body.scene-2 .p2-typo { display: block; }
+  .p2-typo .p2-watermark {
+    position: absolute; top: 10%; left: 4%;
+    font-family:'Playfair Display','Cormorant Garamond',serif;
+    font-size:clamp(32px,5.5vw,72px);font-weight:200;letter-spacing:12px;
+    color:rgba(255,220,160,0.18);white-space:nowrap;
+  }
+  .p2-typo .p2-sub {
+    position: absolute; top: calc(10% + clamp(44px,7vw,90px)); left: 5%;
+    font-family:'Cormorant Garamond',serif;font-size:13px;font-weight:300;letter-spacing:5px;
+    color:rgba(255,200,140,0.28);
+  }
+  .p2-typo .p2-label-a {
+    position:absolute;top:42%;right:6%;
+    font-family:'Playfair Display',serif;font-size:clamp(28px,4.5vw,60px);font-weight:200;letter-spacing:10px;
+    color:rgba(255,200,150,0.14);text-align:right;white-space:nowrap;
+  }
+  .p2-typo .p2-label-b {
+    position:absolute;bottom:18%;left:5%;
+    font-family:'Playfair Display',serif;font-size:clamp(24px,4vw,52px);font-weight:200;letter-spacing:8px;
+    color:rgba(255,180,130,0.12);white-space:nowrap;
+  }
+  .p2-typo .p2-cap {
+    position:absolute;top:52%;right:7%;
+    font-family:'Cormorant Garamond',serif;font-size:11px;font-weight:300;letter-spacing:4px;
+    color:rgba(255,200,140,0.2);text-align:right;font-style:italic;
+  }
+  /* === CARDS: magazine glass === */
+  .p2-card {
+    position:absolute;z-index:20;opacity:0;pointer-events:none;
+    background:rgba(255,255,255,0.05);backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,0.08);border-radius:22px;
+    width:310px;padding:0;overflow:hidden;text-decoration:none;color:inherit;
+    transition:all 0.55s cubic-bezier(0.25,0.8,0.25,1.2);
+    box-shadow:0 8px 32px rgba(0,0,0,0.25),inset 0 1px 0 rgba(255,255,255,0.04);
+  }
+  body.scene-2 .p2-card{pointer-events:auto;animation:cardRise 1s ease-out both;}
+  .p2-card:hover{
+    transform:translateY(-15px) !important;
+    box-shadow:0 20px 50px rgba(0,0,0,0.45),0 0 0 1px rgba(255,200,100,0.2),0 0 30px rgba(255,180,60,0.15),inset 0 1px 0 rgba(255,255,255,0.06);
+    border-color:rgba(255,200,120,0.25);
+  }
+  .p2-card .card-num{position:absolute;top:14px;left:18px;font-family:'Playfair Display',serif;font-size:36px;font-weight:700;color:rgba(255,255,255,0.15);z-index:1;line-height:1;transition:color 0.35s;}
+  .p2-card:hover .card-num{color:rgba(255,200,120,0.3);}
+  .p2-card .card-img{width:100%;height:210px;overflow:hidden;position:relative;}
+  .p2-card .card-img img{width:100%;height:100%;object-fit:cover;transition:transform 0.7s ease;}
+  .p2-card:hover .card-img img{transform:scale(1.06);}
+  .p2-card .card-body{padding:16px 20px 12px;}
+  .p2-card .card-title{font-family:'Inter',sans-serif;font-size:11px;font-weight:500;letter-spacing:3px;color:rgba(255,255,255,0.7);margin:0 0 6px;text-transform:uppercase;}
+  .p2-card .card-desc{font-family:'Cormorant Garamond',serif;font-size:12px;font-weight:300;line-height:1.5;color:rgba(255,255,255,0.35);margin:0 0 10px;}
+  .p2-card .card-tags{display:flex;flex-wrap:wrap;gap:6px;}
+  .p2-card .card-tags span{display:inline-block;padding:2px 8px;border-radius:10px;font-family:'Inter',sans-serif;font-size:9px;font-weight:400;letter-spacing:1px;background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.06);}
+  .p2-card .card-footer{display:flex;align-items:center;justify-content:flex-end;padding:0 20px 14px;gap:6px;}
+  .p2-card .card-footer span{font-family:'Cormorant Garamond',serif;font-size:12px;font-weight:300;letter-spacing:3px;color:rgba(255,255,255,0.35);transition:all 0.35s ease;}
+  .p2-card .card-footer .arr{font-size:18px;transition:all 0.35s ease;color:rgba(255,255,255,0.25);}
+  .p2-card:hover .card-footer .arr{transform:translateX(6px);color:rgba(255,200,100,0.7);}
+  .p2-card:hover .card-footer span{color:rgba(255,255,255,0.55);}
+  /* Card positions */
+  body.scene-2 .p2-card-01{top:8%;left:3%;z-index:22;transform:rotate(0.8deg);animation-delay:0.08s;}
+  body.scene-2 .p2-card-02{top:8%;left:41%;z-index:21;transform:rotate(-0.9deg);animation-delay:0.2s;}
+  body.scene-2 .p2-card-05{top:48%;left:3%;z-index:20;transform:rotate(0.3deg);animation-delay:0.35s;}
+  body.scene-2 .p2-card-07{top:48%;left:41%;z-index:19;transform:rotate(-0.5deg);animation-delay:0.5s;}
+  @keyframes cardRise{from{opacity:0;transform:translateY(40px) rotate(0deg)}to{opacity:1}}
+  /* Fireflies */
+  .p2-fireflies{display:none;position:absolute;inset:0;z-index:16;pointer-events:none;overflow:hidden;}
+  body.scene-2 .p2-fireflies{display:block;}
+  .p2-ff{position:absolute;width:3px;height:3px;border-radius:50%;background:#ffe8a0;
+    box-shadow:0 0 6px 3px rgba(255,220,120,0.55),0 0 14px 6px rgba(255,170,50,0.2);
+    animation:ff-float var(--fdur,6s) ease-in-out infinite;animation-delay:var(--fdelay,0s);opacity:0;}
+  .p2-ff.green{background:#a0ff70;box-shadow:0 0 6px 3px rgba(140,255,90,0.5),0 0 14px 6px rgba(100,210,50,0.18);}
+  @keyframes ff-float{0%{opacity:0;transform:translate(0,0) scale(0.3)}12%{opacity:0.85;transform:translate(10px,-15px) scale(1)}30%{opacity:0.5;transform:translate(-15px,-35px) scale(0.7)}55%{opacity:0.9;transform:translate(18px,-55px) scale(1.15)}75%{opacity:0.25;transform:translate(-20px,-70px) scale(0.5)}92%{opacity:0.7;transform:translate(5px,-85px) scale(0.9)}100%{opacity:0;transform:translate(-8px,-100px) scale(0.2)}}
+  /* Forest */
+  .p2-forest{display:none;position:absolute;bottom:0;left:0;width:100%;z-index:3;pointer-events:none;}
+  body.scene-2 .p2-forest{display:block;}
+  .p2-forest svg{width:100%;height:auto;display:block;}
+  .p2-forest-fog{display:none;position:absolute;bottom:0;left:0;width:100%;height:30%;z-index:3;pointer-events:none;
+    background:linear-gradient(to top,rgba(20,8,15,0.95) 0%,rgba(30,12,20,0.6) 35%,rgba(40,15,22,0.2) 65%,transparent 100%);}
+  body.scene-2 .p2-forest-fog{display:block;}
+  /* Sun */
+  .p2-sun{display:none;position:absolute;right:10%;top:38%;z-index:8;pointer-events:none;
+    width:110px;height:110px;border-radius:50%;transform:translate(0,-50%);
+    background:radial-gradient(circle at 48% 42%,#fffef5 0%,#ffe8c0 20%,#ffc060 45%,rgba(220,120,40,0) 100%);
+    box-shadow:0 0 70px 25px rgba(255,180,60,0.3),0 0 140px 60px rgba(255,140,30,0.12);}
+  body.scene-2 .p2-sun{display:block;animation:sunRise 0.8s ease-out;}
+  @keyframes sunRise{from{opacity:0;transform:translate(0,-50%) scale(0.6)}to{opacity:1;transform:translate(0,-50%) scale(1)}}
+  @keyframes cardFadeIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+/* ============ SCENE 3: NIGHT REDESIGN ============ */
+  body.scene-3 .panel-3{transition:background 0.8s ease;
+    background:
+      radial-gradient(ellipse 60% 45% at 80% 10%,rgba(200,220,255,0.05) 0%,transparent 50%),
+      radial-gradient(ellipse 50% 40% at 20% 20%,rgba(160,180,220,0.03) 0%,transparent 45%),
+      linear-gradient(180deg,#020610 0%,#040c1a 18%,#061020 38%,#050e1a 58%,#030a14 78%,#02060e 100%);}
+  /* Stars */
+  .p3-stars{display:none;position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden;}
+  body.scene-3 .p3-stars{display:block;}
+  .p3-star{position:absolute;border-radius:50%;background:#fff;
+    animation:twinkle var(--dur,3s) ease-in-out infinite;animation-delay:var(--delay,0s);}
+  @keyframes twinkle{0%,100%{opacity:0.12;transform:scale(0.7)}50%{opacity:1;transform:scale(1.5)}}
+  /* Moon */
+  .p3-moon{display:none;position:absolute;right:8%;top:5%;z-index:8;pointer-events:none;
+    width:55px;height:55px;border-radius:50%;
+    background:radial-gradient(circle at 42% 38%,#fffef8 0%,#f0edd8 30%,#d8d4b8 60%,rgba(180,175,155,0) 100%);
+    box-shadow:0 0 35px 18px rgba(210,210,195,0.25),0 0 80px 40px rgba(180,180,170,0.1);}
+  body.scene-3 .p3-moon{display:block;animation:moonRise 0.8s ease-out;}
+  @keyframes moonRise{from{opacity:0;transform:scale(0.5)}to{opacity:1;transform:scale(1)}}
+  /* Floating typography */
+  .p3-typo{display:none;position:absolute;inset:0;z-index:6;pointer-events:none;}
+  body.scene-3 .p3-typo{display:block;}
+  .p3-typo .p3-watermark{
+    position:absolute;top:10%;right:4%;text-align:right;
+    font-family:'Playfair Display','Cormorant Garamond',serif;
+    font-size:clamp(30px,5vw,66px);font-weight:200;letter-spacing:10px;
+    color:rgba(180,200,255,0.14);white-space:nowrap;
+  }
+  .p3-typo .p3-sub{
+    position:absolute;top:calc(10% + clamp(42px,6.5vw,84px));right:5%;text-align:right;
+    font-family:'Cormorant Garamond',serif;font-size:13px;font-weight:300;letter-spacing:4px;
+    color:rgba(160,190,230,0.22);
+  }
+  .p3-typo .p3-label-a{
+    position:absolute;top:38%;left:5%;
+    font-family:'Playfair Display',serif;font-size:clamp(26px,4vw,56px);font-weight:200;letter-spacing:8px;
+    color:rgba(160,200,230,0.12);white-space:nowrap;
+  }
+  .p3-typo .p3-label-b{
+    position:absolute;bottom:20%;right:5%;text-align:right;
+    font-family:'Playfair Display',serif;font-size:clamp(22px,3.5vw,48px);font-weight:200;letter-spacing:6px;
+    color:rgba(140,180,220,0.1);white-space:nowrap;
+  }
+  .p3-typo .p3-cap{
+    position:absolute;top:48%;left:6%;
+    font-family:'Cormorant Garamond',serif;font-size:11px;font-weight:300;letter-spacing:3px;
+    color:rgba(160,200,220,0.18);font-style:italic;
+  }
+  /* Cards */
+  .p3-card{
+    position:absolute;z-index:20;opacity:0;pointer-events:none;
+    background:rgba(255,255,255,0.04);backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,0.06);border-radius:22px;
+    width:310px;padding:0;overflow:hidden;text-decoration:none;color:inherit;
+    transition:all 0.55s cubic-bezier(0.25,0.8,0.25,1.2);
+    box-shadow:0 8px 32px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.03);
+  }
+  body.scene-3 .p3-card{pointer-events:auto;animation:cardRise 1s ease-out both;}
+  .p3-card:hover{
+    transform:translateY(-15px) !important;
+    box-shadow:0 20px 50px rgba(0,0,0,0.5),0 0 0 1px rgba(140,200,180,0.18),0 0 30px rgba(120,180,160,0.12),inset 0 1px 0 rgba(255,255,255,0.04);
+    border-color:rgba(140,200,180,0.2);
+  }
+  .p3-card .card-num{position:absolute;top:14px;left:18px;font-family:'Playfair Display',serif;font-size:36px;font-weight:700;color:rgba(255,255,255,0.12);z-index:1;line-height:1;transition:color 0.35s;}
+  .p3-card:hover .card-num{color:rgba(140,200,180,0.25);}
+  .p3-card .card-img{width:100%;height:210px;overflow:hidden;position:relative;}
+  .p3-card .card-img img{width:100%;height:100%;object-fit:cover;transition:transform 0.7s ease;}
+  .p3-card:hover .card-img img{transform:scale(1.06);}
+  .p3-card .card-body{padding:16px 20px 12px;}
+  .p3-card .card-title{font-family:'Inter',sans-serif;font-size:11px;font-weight:500;letter-spacing:3px;color:rgba(255,255,255,0.65);margin:0 0 6px;text-transform:uppercase;}
+  .p3-card .card-desc{font-family:'Cormorant Garamond',serif;font-size:12px;font-weight:300;line-height:1.5;color:rgba(255,255,255,0.3);margin:0 0 10px;}
+  .p3-card .card-tags{display:flex;flex-wrap:wrap;gap:6px;}
+  .p3-card .card-tags span{display:inline-block;padding:2px 8px;border-radius:10px;font-family:'Inter',sans-serif;font-size:9px;font-weight:400;letter-spacing:1px;background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.35);border:1px solid rgba(255,255,255,0.05);}
+  .p3-card .card-footer{display:flex;align-items:center;justify-content:flex-end;padding:0 20px 14px;gap:6px;}
+  .p3-card .card-footer span{font-family:'Cormorant Garamond',serif;font-size:12px;font-weight:300;letter-spacing:3px;color:rgba(255,255,255,0.3);transition:all 0.35s ease;}
+  .p3-card .card-footer .arr{font-size:18px;transition:all 0.35s ease;color:rgba(255,255,255,0.2);}
+  .p3-card:hover .card-footer .arr{transform:translateX(6px);color:rgba(140,200,160,0.6);}
+  .p3-card:hover .card-footer span{color:rgba(255,255,255,0.5);}
+  /* Card positions */
+  body.scene-3 .p3-card-03{top:8%;left:3%;z-index:22;transform:rotate(-0.6deg);animation-delay:0.08s;}
+  body.scene-3 .p3-card-04{top:8%;left:41%;z-index:21;transform:rotate(0.7deg);animation-delay:0.2s;}
+  body.scene-3 .p3-card-06{top:48%;left:3%;z-index:20;transform:rotate(-0.3deg);animation-delay:0.35s;}
+  body.scene-3 .p3-card-08{top:48%;left:41%;z-index:19;transform:rotate(0.5deg);animation-delay:0.5s;}
+  /* Fireflies */
+  .p3-fireflies{display:none;position:absolute;inset:0;z-index:16;pointer-events:none;overflow:hidden;}
+  body.scene-3 .p3-fireflies{display:block;}
+  .p3-ff{position:absolute;width:3px;height:3px;border-radius:50%;background:#a0ff70;
+    box-shadow:0 0 7px 3px rgba(140,255,100,0.5),0 0 16px 7px rgba(100,220,60,0.2);
+    animation:ff-float var(--fdur,7s) ease-in-out infinite;animation-delay:var(--fdelay,0s);opacity:0;}
+  .p3-ff.gold{background:#ffe8a0;box-shadow:0 0 6px 3px rgba(255,220,120,0.45),0 0 14px 6px rgba(255,170,50,0.15);}
+  /* Forest */
+  .p3-forest{display:none;position:absolute;bottom:0;left:0;width:100%;z-index:3;pointer-events:none;}
+  body.scene-3 .p3-forest{display:block;}
+  .p3-forest svg{width:100%;height:auto;display:block;}
+  .p3-forest-fog{display:none;position:absolute;bottom:0;left:0;width:100%;height:35%;z-index:3;pointer-events:none;
+    background:linear-gradient(to top,rgba(2,4,10,0.98) 0%,rgba(3,6,14,0.6) 30%,rgba(4,10,18,0.2) 60%,transparent 100%);}
+  body.scene-3 .p3-forest-fog{display:block;}
+  /* ============ SPOTLIGHT BLACK CIRCLE ============ */
+  #spotlight {
+    position: fixed; z-index: 999; pointer-events: none;
+    width: 270px; height: 270px; border-radius: 50%;
+    background: #0a0a0a;
+    transform: translate(-50%, -50%);
+    opacity: 0; transition: opacity 0.25s ease;
+    overflow: hidden;
+  }
+  #spotlight.visible { opacity: 1; }
+  .spotlight-clone {
+    position: absolute;
+    text-align: center;
+    white-space: nowrap;
+  }
+  .spotlight-clone .s-title {
+    font-family: 'Playfair Display', 'Cormorant Garamond', 'Georgia', serif;
+    font-size: clamp(36px, 6.8vw, 90px); font-weight: 800;
+    color: #ffffff; letter-spacing: 2px; white-space: nowrap;
+  }
+  .spotlight-clone .s-line {
+    width: 80px; height: 1px; background: rgba(255,255,255,0.4);
+    margin: 20px auto;
+  }
+  .spotlight-clone .s-sub {
+    font-family: 'Cormorant Garamond', 'Noto Serif SC', serif;
+    font-size: 15px; font-weight: 300; letter-spacing: 10px;
+    color: rgba(255,255,255,0.6);
+  }
+  /* ============ END SPOTLIGHT ============ */
 /* ============ LEAF CURSOR ============ */
   #leaf-cursor { position: fixed; z-index: 9999; pointer-events: none; width: 18px; height: auto; transition: transform 0.08s ease-out; }
   #leaf-cursor.clicking { transform: scale(0.75); }
@@ -178,36 +403,211 @@
       <div class="hero-line"></div>
       <p class="hero-sub">A digital media art cutie</p>
     </section>
-  </main></div></div></div><!-- /app-container -->
+  </main>
 
 </div>
     </div>
 
-    </div><!-- /app-container -->
+    <!-- ===== PANEL 2: DUSK (33-66%) ===== -->
+    <div class="panel panel-2">
+      <div class="p2-typo">
+        <div class="p2-watermark">GOLDEN HOUR</div>
+        <div class="p2-sub">Exploring the last light</div>
+        <div class="p2-label-a">PORTFOLIO</div>
+        <div class="p2-cap">Selected works in digital art &amp; interactive design</div>
+        <div class="p2-label-b">SELECTED</div>
+      </div>
+      <div class="p2-sun"></div>
+      <div class="p2-forest">
+        <svg viewBox="0 0 1200 220" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0,220 L0,103 L35.4545454545455,187 L54.5454545454545,163 L73.6363636363636,187 L90,187 L109.090909090909,105 L128.181818181818,187 L144.545454545455,187 L163.636363636364,154 L182.727272727273,187 L199.090909090909,187 L218.181818181818,153 L237.272727272727,187 L253.636363636364,187 L272.727272727273,160 L291.818181818182,187 L308.181818181818,187 L327.272727272727,128 L346.363636363636,187 L362.727272727273,187 L381.818181818182,111 L400.909090909091,187 L417.272727272727,187 L436.363636363636,161 L455.454545454545,187 L471.818181818182,187 L490.909090909091,154 L510,187 L526.363636363636,187 L545.454545454545,101 L564.545454545455,187 L580.909090909091,187 L600,153 L619.090909090909,187 L635.454545454545,187 L654.545454545455,123 L673.636363636364,187 L690,187 L709.090909090909,121 L728.181818181818,187 L744.545454545455,187 L763.636363636364,131 L782.727272727273,187 L799.090909090909,187 L818.181818181818,121 L837.272727272727,187 L853.636363636364,187 L872.727272727273,160 L891.818181818182,187 L908.181818181818,187 L927.272727272727,119 L946.363636363636,187 L962.727272727273,187 L981.818181818182,137 L1000.90909090909,187 L1017.27272727273,187 L1036.36363636364,125 L1055.45454545455,187 L1071.81818181818,187 L1090.90909090909,105 L1110,187 L1126.36363636364,187 L1145.45454545455,109 L1164.54545454545,187 L1200,187 L1200,220 Z" fill="rgba(30,18,25,0.4)"/><path d="M0,220 L0,154 L43.3333333333333,199 L66.6666666666667,171 L90,199 L110,199 L133.333333333333,156 L156.666666666667,199 L176.666666666667,199 L200,165 L223.333333333333,199 L243.333333333333,199 L266.666666666667,135 L290,199 L310,199 L333.333333333333,182 L356.666666666667,199 L376.666666666667,199 L400,147 L423.333333333333,199 L443.333333333333,199 L466.666666666667,170 L490,199 L510,199 L533.333333333333,122 L556.666666666667,199 L576.666666666667,199 L600,175 L623.333333333333,199 L643.333333333333,199 L666.666666666667,180 L690,199 L710,199 L733.333333333333,149 L756.666666666667,199 L776.666666666667,199 L800,122 L823.333333333333,199 L843.333333333333,199 L866.666666666667,169 L890,199 L910,199 L933.333333333333,149 L956.666666666667,199 L976.666666666667,199 L1000,157 L1023.33333333333,199 L1043.33333333333,199 L1066.66666666667,153 L1090,199 L1110,199 L1133.33333333333,161 L1156.66666666667,199 L1200,199 L1200,220 Z" fill="rgba(38,20,28,0.5)"/><path d="M0,220 L0,170 L55.7142857142857,208 L85.7142857142857,184 L115.714285714286,208 L141.428571428571,208 L171.428571428571,164 L201.428571428571,208 L227.142857142857,208 L257.142857142857,159 L287.142857142857,208 L312.857142857143,208 L342.857142857143,200 L372.857142857143,208 L398.571428571429,208 L428.571428571429,164 L458.571428571429,208 L484.285714285714,208 L514.285714285714,162 L544.285714285714,208 L570,208 L600,193 L630,208 L655.714285714286,208 L685.714285714286,191 L715.714285714286,208 L741.428571428571,208 L771.428571428571,190 L801.428571428571,208 L827.142857142857,208 L857.142857142857,160 L887.142857142857,208 L912.857142857143,208 L942.857142857143,200 L972.857142857143,208 L998.571428571428,208 L1028.57142857143,164 L1058.57142857143,208 L1084.28571428571,208 L1114.28571428571,150 L1144.28571428571,208 L1200,208 L1200,220 Z" fill="rgba(45,22,32,0.6)"/>
+        </svg>
+      </div>
+      <div class="p2-forest-fog"></div>
+      <div class="p2-fireflies">        <div class="p2-ff green" style="left:3%;top:52%;--fdur:5.5s;--fdelay:-3s;"></div>
+        <div class="p2-ff" style="left:10%;top:58%;--fdur:5.6s;--fdelay:-4.3s;"></div>
+        <div class="p2-ff" style="left:17%;top:48%;--fdur:6.2s;--fdelay:-1s;"></div>
+        <div class="p2-ff green" style="left:25%;top:62%;--fdur:5.5s;--fdelay:-2.5s;"></div>
+        <div class="p2-ff" style="left:33%;top:55%;--fdur:8.3s;--fdelay:-1.9s;"></div>
+        <div class="p2-ff" style="left:41%;top:50%;--fdur:6.6s;--fdelay:-3.5s;"></div>
+        <div class="p2-ff green" style="left:49%;top:60%;--fdur:5.5s;--fdelay:-1.4s;"></div>
+        <div class="p2-ff" style="left:57%;top:54%;--fdur:7.5s;--fdelay:-2.8s;"></div>
+        <div class="p2-ff" style="left:65%;top:48%;--fdur:9.3s;--fdelay:-1s;"></div>
+        <div class="p2-ff green" style="left:73%;top:58%;--fdur:8.8s;--fdelay:-2.2s;"></div>
+        <div class="p2-ff" style="left:81%;top:52%;--fdur:7s;--fdelay:-3.4s;"></div>
+        <div class="p2-ff" style="left:89%;top:62%;--fdur:7.6s;--fdelay:-3.9s;"></div>
+        <div class="p2-ff green" style="left:14%;top:56%;--fdur:8.4s;--fdelay:-0.1s;"></div>
+        <div class="p2-ff" style="left:28%;top:46%;--fdur:5.6s;--fdelay:-1.7s;"></div>
+        <div class="p2-ff" style="left:44%;top:60%;--fdur:6.2s;--fdelay:-3.3s;"></div>
+        <div class="p2-ff green" style="left:60%;top:50%;--fdur:5.6s;--fdelay:-0.7s;"></div>
+      </div>
+      <a href="project-01-figma.html" class="p2-card p2-card-01">
+        <div class="card-num">01</div>
+        <div class="card-img"><img src="portfolio/01_figma.png" alt="Figma Prototype" loading="lazy"></div>
+        <div class="card-body">
+          <h3 class="card-title">FIGMA PROTOTYPE</h3>
+          <p class="card-desc">High-fidelity interactive UI prototype for Wuxi Wei products &mdash; bridging design and development.</p>
+          <div class="card-tags"><span>Figma</span><span>UI/UX</span><span>Prototyping</span></div>
+        </div>
+        <div class="card-footer"><span>Explore</span><span class="arr">&rarr;</span></div>
+      </a>
+      <a href="project-02-web-evolution.html" class="p2-card p2-card-02">
+        <div class="card-num">02</div>
+        <div class="card-img"><img src="portfolio/02_web_evolution.png" alt="Interactive Web Evolution" loading="lazy"></div>
+        <div class="card-body">
+          <h3 class="card-title">WEB EVOLUTION</h3>
+          <p class="card-desc">From static wilderness to misty forest &mdash; two interactive web experiences exploring nature through code.</p>
+          <div class="card-tags"><span>HTML/CSS</span><span>Interactive</span><span>WebGL</span></div>
+        </div>
+        <div class="card-footer"><span>Explore</span><span class="arr">&rarr;</span></div>
+      </a>
+      <a href="project-05-zippo-collaboration.html" class="p2-card p2-card-05">
+        <div class="card-num">05</div>
+        <div class="card-img"><img src="portfolio/05_zippo.png" alt="Zippo Collaboration" loading="lazy"></div>
+        <div class="card-body">
+          <h3 class="card-title">ZIPPO COLLAB</h3>
+          <p class="card-desc">Cyberpunk-inspired lighter design with gradient lacquer &amp; laser engraving for Zippo.</p>
+          <div class="card-tags"><span>Industrial</span><span>Cyberpunk</span><span>Design</span></div>
+        </div>
+        <div class="card-footer"><span>Explore</span><span class="arr">&rarr;</span></div>
+      </a>
+      <a href="project-07-nature-wilderness.html" class="p2-card p2-card-07">
+        <div class="card-num">07</div>
+        <div class="card-img"><img src="portfolio/02_web_evolution.png" alt="Nature Wilderness" loading="lazy"></div>
+        <div class="card-body">
+          <h3 class="card-title">NATURE WILDERNESS</h3>
+          <p class="card-desc">An immersive first-edition interactive web experience &mdash; exploring the beauty of untamed nature.</p>
+          <div class="card-tags"><span>CSS Art</span><span>Animation</span><span>Nature</span></div>
+        </div>
+        <div class="card-footer"><span>Explore</span><span class="arr">&rarr;</span></div>
+      </a>
+    </div>
+<!-- ===== PANEL 3: NIGHT (66-100%) ===== -->
+    <div class="panel panel-3">
+      <div class="p3-stars">
+        <div class="p3-star" style="left:8%;top:22%;width:2.4px;height:2.4px;--dur:2.4s;--delay:-3.7s;"></div>
+        <div class="p3-star" style="left:17%;top:18%;width:2.2px;height:2.2px;--dur:4.7s;--delay:-3.9s;"></div>
+        <div class="p3-star" style="left:35%;top:34%;width:2.3px;height:2.3px;--dur:4.4s;--delay:-2.2s;"></div>
+        <div class="p3-star" style="left:84%;top:21%;width:2.3px;height:2.3px;--dur:2.1s;--delay:-2.1s;"></div>
+        <div class="p3-star" style="left:63%;top:3%;width:1.2px;height:1.2px;--dur:2.2s;--delay:-1.4s;"></div>
+        <div class="p3-star" style="left:75%;top:7%;width:2px;height:2px;--dur:3.3s;--delay:-3.1s;"></div>
+        <div class="p3-star" style="left:66%;top:36%;width:1.4px;height:1.4px;--dur:5.1s;--delay:-2s;"></div>
+        <div class="p3-star" style="left:79%;top:26%;width:2.2px;height:2.2px;--dur:2.6s;--delay:-3.2s;"></div>
+        <div class="p3-star" style="left:92%;top:2%;width:1.1px;height:1.1px;--dur:2.3s;--delay:-1.9s;"></div>
+        <div class="p3-star" style="left:2%;top:30%;width:1.7px;height:1.7px;--dur:3.3s;--delay:-1.5s;"></div>
+        <div class="p3-star" style="left:94%;top:23%;width:1.1px;height:1.1px;--dur:4.5s;--delay:-2.9s;"></div>
+        <div class="p3-star" style="left:51%;top:17%;width:2.2px;height:2.2px;--dur:3s;--delay:-2.7s;"></div>
+        <div class="p3-star" style="left:21%;top:7%;width:1.7px;height:1.7px;--dur:4.7s;--delay:-3.6s;"></div>
+        <div class="p3-star" style="left:5%;top:40%;width:1.7px;height:1.7px;--dur:4.1s;--delay:-2.2s;"></div>
+        <div class="p3-star" style="left:71%;top:7%;width:1.1px;height:1.1px;--dur:3.3s;--delay:-1s;"></div>
+        <div class="p3-star" style="left:86%;top:37%;width:1.1px;height:1.1px;--dur:4.5s;--delay:-2s;"></div>
+        <div class="p3-star" style="left:41%;top:18%;width:2.1px;height:2.1px;--dur:4.8s;--delay:-3.3s;"></div>
+        <div class="p3-star" style="left:43%;top:18%;width:2.3px;height:2.3px;--dur:5s;--delay:-2.1s;"></div>
+        <div class="p3-star" style="left:64%;top:5%;width:1.2px;height:1.2px;--dur:5.3s;--delay:-3.3s;"></div>
+        <div class="p3-star" style="left:6%;top:11%;width:2px;height:2px;--dur:4s;--delay:-3.6s;"></div>
+        <div class="p3-star" style="left:28%;top:41%;width:1.5px;height:1.5px;--dur:2.1s;--delay:-1.9s;"></div>
+        <div class="p3-star" style="left:30%;top:42%;width:1.1px;height:1.1px;--dur:2.7s;--delay:-0.2s;"></div>
+        <div class="p3-star" style="left:30%;top:20%;width:1.7px;height:1.7px;--dur:3.2s;--delay:-2.2s;"></div>
+        <div class="p3-star" style="left:67%;top:26%;width:2.3px;height:2.3px;--dur:4.8s;--delay:-2.5s;"></div>
+        <div class="p3-star" style="left:10%;top:28%;width:1.3px;height:1.3px;--dur:3.8s;--delay:-0.1s;"></div>
+      </div>
+      <div class="p3-typo">
+        <div class="p3-watermark">STARRY NIGHT</div>
+        <div class="p3-subtitle">Memories under the moon</div>
+        <div class="p3-label-a">ARCHIVE</div>
+        <div class="p3-label-b">COLLECTION</div>
+        <div class="p3-cap">Curated works &mdash; from data to dreams</div>
+      </div>
+      <div class="p3-moon"></div>
+      <div class="p3-forest">
+        <svg viewBox="0 0 1200 220" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0,220 L0,136 L35.4545454545455,190 L54.5454545454545,103 L73.6363636363636,190 L90,190 L109.090909090909,113 L128.181818181818,190 L144.545454545455,190 L163.636363636364,161 L182.727272727273,190 L199.090909090909,190 L218.181818181818,112 L237.272727272727,190 L253.636363636364,190 L272.727272727273,108 L291.818181818182,190 L308.181818181818,190 L327.272727272727,147 L346.363636363636,190 L362.727272727273,190 L381.818181818182,114 L400.909090909091,190 L417.272727272727,190 L436.363636363636,118 L455.454545454545,190 L471.818181818182,190 L490.909090909091,166 L510,190 L526.363636363636,190 L545.454545454545,169 L564.545454545455,190 L580.909090909091,190 L600,150 L619.090909090909,190 L635.454545454545,190 L654.545454545455,170 L673.636363636364,190 L690,190 L709.090909090909,163 L728.181818181818,190 L744.545454545455,190 L763.636363636364,147 L782.727272727273,190 L799.090909090909,190 L818.181818181818,138 L837.272727272727,190 L853.636363636364,190 L872.727272727273,139 L891.818181818182,190 L908.181818181818,190 L927.272727272727,147 L946.363636363636,190 L962.727272727273,190 L981.818181818182,158 L1000.90909090909,190 L1017.27272727273,190 L1036.36363636364,111 L1055.45454545455,190 L1071.81818181818,190 L1090.90909090909,159 L1110,190 L1126.36363636364,190 L1145.45454545455,127 L1164.54545454545,190 L1200,190 L1200,220 Z" fill="rgba(8,14,30,0.5)"/>
+          <path d="M0,220 L0,181 L43.3333333333333,202 L66.6666666666667,159 L90,202 L110,202 L133.333333333333,170 L156.666666666667,202 L176.666666666667,202 L200,158 L223.333333333333,202 L243.333333333333,202 L266.666666666667,169 L290,202 L310,202 L333.333333333333,163 L356.666666666667,202 L376.666666666667,202 L400,157 L423.333333333333,202 L443.333333333333,202 L466.666666666667,141 L490,202 L510,202 L533.333333333333,185 L556.666666666667,202 L576.666666666667,202 L600,150 L623.333333333333,202 L643.333333333333,202 L666.666666666667,166 L690,202 L710,202 L733.333333333333,135 L756.666666666667,202 L776.666666666667,202 L800,152 L823.333333333333,202 L843.333333333333,202 L866.666666666667,126 L890,202 L910,202 L933.333333333333,190 L956.666666666667,202 L976.666666666667,202 L1000,183 L1023.33333333333,202 L1043.33333333333,202 L1066.66666666667,180 L1090,202 L1110,202 L1133.33333333333,129 L1156.66666666667,202 L1200,202 L1200,220 Z" fill="rgba(12,18,35,0.6)"/>
+          <path d="M0,220 L0,172 L55.7142857142857,211 L85.7142857142857,204 L115.714285714286,211 L141.428571428571,211 L171.428571428571,188 L201.428571428571,211 L227.142857142857,211 L257.142857142857,186 L287.142857142857,211 L312.857142857143,211 L342.857142857143,191 L372.857142857143,211 L398.571428571429,211 L428.571428571429,184 L458.571428571429,211 L484.285714285714,211 L514.285714285714,183 L544.285714285714,211 L570,211 L600,170 L630,211 L655.714285714286,211 L685.714285714286,179 L715.714285714286,211 L741.428571428571,211 L771.428571428571,176 L801.428571428571,211 L827.142857142857,211 L857.142857142857,153 L887.142857142857,211 L912.857142857143,211 L942.857142857143,155 L972.857142857143,211 L998.571428571428,211 L1028.57142857143,203 L1058.57142857143,211 L1084.28571428571,211 L1114.28571428571,195 L1144.28571428571,211 L1200,211 L1200,220 Z" fill="rgba(16,22,40,0.7)"/>
+        </svg>
+      </div>
+      <div class="p3-forest-fog"></div>
+      <div class="p3-fireflies">
+        <div class="p3-ff gold" style="left:3%;top:50%;--fdur:9.5s;--fdelay:-2.7s;"></div>
+        <div class="p3-ff" style="left:10%;top:55%;--fdur:9.1s;--fdelay:-6.6s;"></div>
+        <div class="p3-ff" style="left:17%;top:46%;--fdur:10.4s;--fdelay:-2.5s;"></div>
+        <div class="p3-ff" style="left:25%;top:60%;--fdur:9.7s;--fdelay:-6.4s;"></div>
+        <div class="p3-ff gold" style="left:33%;top:52%;--fdur:10.2s;--fdelay:-6.5s;"></div>
+        <div class="p3-ff" style="left:41%;top:48%;--fdur:6.5s;--fdelay:-6.3s;"></div>
+        <div class="p3-ff" style="left:49%;top:58%;--fdur:7.9s;--fdelay:-1.7s;"></div>
+        <div class="p3-ff" style="left:57%;top:53%;--fdur:8.5s;--fdelay:-5.9s;"></div>
+        <div class="p3-ff gold" style="left:65%;top:47%;--fdur:7.4s;--fdelay:-4.5s;"></div>
+        <div class="p3-ff" style="left:73%;top:60%;--fdur:9.3s;--fdelay:-2.6s;"></div>
+        <div class="p3-ff" style="left:81%;top:52%;--fdur:7.4s;--fdelay:-0.6s;"></div>
+        <div class="p3-ff" style="left:89%;top:56%;--fdur:7.4s;--fdelay:-2.6s;"></div>
+        <div class="p3-ff gold" style="left:14%;top:42%;--fdur:6.2s;--fdelay:-5.1s;"></div>
+        <div class="p3-ff" style="left:28%;top:58%;--fdur:10s;--fdelay:-3.8s;"></div>
+        <div class="p3-ff" style="left:44%;top:50%;--fdur:6.9s;--fdelay:-0.6s;"></div>
+        <div class="p3-ff" style="left:60%;top:62%;--fdur:6.1s;--fdelay:-3.6s;"></div>
+        <div class="p3-ff gold" style="left:76%;top:44%;--fdur:9.7s;--fdelay:-5.8s;"></div>
+        <div class="p3-ff" style="left:92%;top:54%;--fdur:8.7s;--fdelay:-6.8s;"></div>
+      </div>
+      <div class="p3-mag">
+        <div class="mag-vert" style="top:12%;right:1.5%;">SELECTED</div>
+        <div class="mag-rule" style="top:25%;right:3%;width:80px;"></div>
+        <div class="mag-label" style="top:5%;left:4%;">PROJECTS</div>
+        <div class="mag-caption" style="bottom:6%;right:3%;text-align:right;">Exploration &amp; Discovery</div>
+      </div>
+      <a href="project-03-tiny-certainty.html" class="p3-card p3-card-03">
+        <div class="card-num">03</div>
+        <div class="card-img"><img src="portfolio/03_tiny_certainty.png" alt="Tiny Certainty" loading="lazy"></div>
+        <div class="card-body">
+          <h3 class="card-title">TINY CERTAINTY</h3>
+          <p class="card-desc">A Unity 3D interactive experience &mdash; finding certainty in the smallest, most delicate moments of life.</p>
+          <div class="card-tags"><span>Unity</span><span>C#</span><span>3D</span><span>Interactive</span></div>
+        </div>
+        <div class="card-footer"><span>Explore</span><span class="arr">&rarr;</span></div>
+      </a>
+      <a href="project-04-data-visualization.html" class="p3-card p3-card-04">
+        <div class="card-num">04</div>
+        <div class="card-img"><img src="portfolio/04_dataviz.jpg" alt="Data Visualization" loading="lazy"></div>
+        <div class="card-body">
+          <h3 class="card-title">DATA VIZ</h3>
+          <p class="card-desc">Transforming complex datasets into compelling visual narratives &amp; information graphics.</p>
+          <div class="card-tags"><span>Data</span><span>Design</span><span>Illustrator</span></div>
+        </div>
+        <div class="card-footer"><span>Explore</span><span class="arr">&rarr;</span></div>
+      </a>
+      <a href="project-06-long-march.html" class="p3-card p3-card-06">
+        <div class="card-num">06</div>
+        <div class="card-img"><img src="portfolio/06_longmarch.png" alt="Long March History" loading="lazy"></div>
+        <div class="card-body">
+          <h3 class="card-title">LONG MARCH</h3>
+          <p class="card-desc">3D Spline recreation of Red Army supply logistics &mdash; where historical data meets spatial narrative.</p>
+          <div class="card-tags"><span>Spline</span><span>3D</span><span>History</span><span>Narrative</span></div>
+        </div>
+        <div class="card-footer"><span>Explore</span><span class="arr">&rarr;</span></div>
+      </a>
+      <a href="project-08-misty-forest.html" class="p3-card p3-card-08">
+        <div class="card-num">08</div>
+        <div class="card-img"><img src="portfolio/02_web_evolution.png" alt="Misty Forest" loading="lazy"></div>
+        <div class="card-body">
+          <h3 class="card-title">MISTY FOREST</h3>
+          <p class="card-desc">An atmospheric interactive web journey through mist-shrouded woodland &mdash; silence meets code.</p>
+          <div class="card-tags"><span>CSS Art</span><span>Atmosphere</span><span>WebGL</span></div>
+        </div>
+        <div class="card-footer"><span>Explore</span><span class="arr">&rarr;</span></div>
+      </a>
+        </div></div>
+</div><!-- /app-container -->
 
 
 <div id="leaf-cursor"></div>
 <div class="scroll-progress-bar"></div>
 
-<!-- THREE.JS CDN -->
-<script type="importmap">
-{
-  "imports": {
-    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
-  }
-}
-</script>
 <script src="forest-engine.js"></script>
 
-  <!-- THREE.JS CANVAS BACKGROUND -->
-<canvas id="three-canvas" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:1;"></canvas>
   <!-- SPOTLIGHT BLACK CIRCLE -->
   <div id="spotlight">
-    <div class="spotlight-inner">
-      <h1 class="hero-title" style="color:#fff;text-shadow:none">你好，我是宋宇</h1>
-      <div class="hero-line" style="background:rgba(255,255,255,0.4)"></div>
-      <p class="hero-sub" style="color:rgba(255,255,255,0.6);text-shadow:none">数字媒体艺术的一名小可爱</p>
+    <div class="spotlight-clone">
+      <div class="s-title"><span class="hero-letter" style="--i:0; animation-delay:0s">你</span><span class="hero-letter" style="--i:1; animation-delay:0.03s">好</span><span class="hero-letter" style="--i:2; animation-delay:0.06s">，</span><span class="hero-letter" style="--i:3; animation-delay:0.09s">我</span><span class="hero-letter" style="--i:4; animation-delay:0.12s">是</span><span class="hero-letter" style="--i:5; animation-delay:0.15s">宋</span><span class="hero-letter" style="--i:6; animation-delay:0.18s">宇</span></div>
+      <div class="s-line"></div>
+      <div class="s-sub">数字媒体艺术的一名小可爱</div>
     </div>
   </div>
 <script>
@@ -234,7 +634,7 @@
   document.addEventListener('mousemove', function(e) { mx = e.clientX; my = e.clientY; });
   document.addEventListener('mousedown', function() { svg.classList.add('clicking'); });
   document.addEventListener('mouseup', function() { svg.classList.remove('clicking'); });
-  document.querySelectorAll('a, button, .nav-bar a').forEach(function(el) {
+  document.querySelectorAll('a, button, .nav-bar a, .p2-card, .p3-card').forEach(function(el) {
     el.addEventListener('mouseenter', function() { svg.classList.add('hovering-interactive'); });
     el.addEventListener('mouseleave', function() { svg.classList.remove('hovering-interactive'); });
   });
@@ -254,10 +654,11 @@
 (function(){
   var spotlight = document.getElementById('spotlight');
   if (!spotlight) return;
-  var inner = spotlight.querySelector('.spotlight-inner');
+  var clone = spotlight.querySelector('.spotlight-clone');
   var hero = document.querySelector('.hero');
-  if (!hero || !inner) return;
+  if (!hero || !clone) return;
 
+  var SW = 270;
   var mx = -500, my = -500;
   var sx = -500, sy = -500;
 
@@ -271,235 +672,124 @@
     spotlight.classList.remove('visible');
   });
 
-  function syncInner() {
-    var heroRect = hero.getBoundingClientRect();
-    var spotRect = spotlight.getBoundingClientRect();
-    // Position the inner hero replica so it overlays the real hero exactly
-    inner.style.left = (heroRect.left - spotRect.left) + 'px';
-    inner.style.top = (heroRect.top - spotRect.top) + 'px';
-    inner.style.width = heroRect.width + 'px';
-    inner.style.height = heroRect.height + 'px';
-  }
-
   function anim() {
     sx += (mx - sx) * 0.18;
     sy += (my - sy) * 0.18;
     spotlight.style.left = sx + 'px';
     spotlight.style.top = sy + 'px';
-    syncInner();
+
+    var heroRect = hero.getBoundingClientRect();
+    var hcx = heroRect.left + heroRect.width / 2;
+    var hcy = heroRect.top + heroRect.height / 2;
+    clone.style.left = (hcx - sx) + 'px';
+    clone.style.top = (hcy - sy) + 'px';
+
     requestAnimationFrame(anim);
   }
   anim();
 })();
 
-
-// ===== NAV DOTS (simplified for single panel) =====
+// ===== MOUSE PARALLAX =====
 (function(){
-    var navDots = document.querySelectorAll('.nav-bar a');
-    if (navDots.length > 0) {
-        navDots[0].classList.add('active');
-        for (var i = 1; i < navDots.length; i++) {
-            navDots[i].classList.add('inactive');
-        }
+  var mx=0,my=0;
+  document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;});
+  function tick(){
+    var vw=window.innerWidth||document.documentElement.clientWidth;
+    var vh=window.innerHeight||document.documentElement.clientHeight;
+    var rx=(mx/vw-0.5)*2;
+    var ry=(my/vh-0.5)*2;
+    var cards=document.querySelectorAll('.p2-card,.p3-card');
+    for(var i=0;i<cards.length;i++){
+      var depth=parseFloat(cards[i].style.getPropertyValue('--depth')||(0.5+i*0.15));
+      cards[i].style.setProperty('--px',(rx*depth*8).toFixed(1)+'px');
+      cards[i].style.setProperty('--py',(ry*depth*5).toFixed(1)+'px');
     }
+    var typos=document.querySelectorAll('.p2-typo>*,.p3-typo>*');
+    for(var j=0;j<typos.length;j++){
+      typos[j].style.setProperty('--px',(rx*3).toFixed(1)+'px');
+      typos[j].style.setProperty('--py',(ry*2).toFixed(1)+'px');
+    }
+    requestAnimationFrame(tick);
+  }
+  tick();
 })();
-</script>
-<!-- GLASS CARD OVERLAY -->
-<div id="glass-card" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:500;
-  background:rgba(10,10,15,0.75);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
-  border:1px solid rgba(255,255,255,0.1);border-radius:24px;padding:0;width:420px;max-width:90vw;
-  box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 0 1px rgba(255,255,255,0.05) inset;
-  animation:cardSlideIn 0.5s cubic-bezier(0.22,0.61,0.36,1);overflow:hidden;">
-  <div style="position:relative;">
-    <div id="card-img-placeholder" style="width:100%;height:220px;background:rgba(255,255,255,0.03);
-      display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.15);font-family:'Cormorant Garamond',serif;font-size:14px;letter-spacing:4px;">
-      Project Preview
-    </div>
-    <button id="card-close" style="position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;
-      border:1px solid rgba(255,255,255,0.15);background:rgba(0,0,0,0.4);color:rgba(255,255,255,0.5);
-      cursor:pointer;font-size:14px;line-height:1;transition:all 0.3s;display:flex;align-items:center;justify-content:center;"
-      onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff';"
-      onmouseout="this.style.background='rgba(0,0,0,0.4)';this.style.color='rgba(255,255,255,0.5)';"
-      onclick="document.getElementById('glass-card').style.display='none';">&times;</button>
-  </div>
-  <div style="padding:24px 28px 28px;">
-    <div style="font-family:'Inter',sans-serif;font-size:10px;font-weight:500;letter-spacing:4px;color:rgba(255,255,255,0.35);margin-bottom:8px;">PROJECT</div>
-    <h3 id="card-title" style="font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:rgba(255,255,255,0.9);margin:0 0 10px;letter-spacing:1px;">Forest Cabin</h3>
-    <p id="card-desc" style="font-family:'Cormorant Garamond',serif;font-size:14px;line-height:1.6;color:rgba(255,255,255,0.45);margin:0 0 18px;">
-      A low-poly 3D forest cabin scene — exploring the intersection of nature and digital craftsmanship.
-    </p>
-    <div id="card-tags" style="display:flex;flex-wrap:wrap;gap:6px;">
-      <span style="padding:3px 10px;border-radius:12px;font-family:'Inter',sans-serif;font-size:9px;letter-spacing:1px;background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.08);">Three.js</span>
-      <span style="padding:3px 10px;border-radius:12px;font-family:'Inter',sans-serif;font-size:9px;letter-spacing:1px;background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.08);">3D</span>
-      <span style="padding:3px 10px;border-radius:12px;font-family:'Inter',sans-serif;font-size:9px;letter-spacing:1px;background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.08);">GLTF</span>
-    </div>
-  </div>
-</div>
-@keyframes cardSlideIn {
-  from { opacity:0; transform:translate(-50%,-50%) translateY(30px); }
-  to { opacity:1; transform:translate(-50%,-50%) translateY(0); }
-}
-<script type="module">
-import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+// ===== SCROLL + DRAG + PARALLAX =====
+(function(){
+    var container = document.querySelector('.app-container');
+    if (!container) return;
 
-const canvas = document.getElementById('three-canvas');
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.1;
+    container.addEventListener('wheel', function(e) {
+        e.preventDefault();
+        container.scrollLeft += e.deltaY * 1.5;
+    }, { passive: false });
 
-const scene = new THREE.Scene();
-scene.background = null;
-scene.fog = new THREE.FogExp2(0x1a2a1a, 0.0008);
+    var isDown = false, startX = 0, scrollStart = 0;
+    var scrollContent = document.querySelector('.scroll-content');
 
-const camera = new THREE.PerspectiveCamera(50, window.innerWidth/window.innerHeight, 0.5, 100);
-camera.position.set(6, 3.5, 8);
-camera.lookAt(0, 1.5, 0);
+    container.addEventListener('mousedown', function(e) {
+        isDown = true;
+        if (scrollContent) scrollContent.classList.add('grabbing');
+        container.style.userSelect = 'none';
+        startX = e.pageX;
+        scrollStart = container.scrollLeft;
+    });
 
-// Lighting
-const ambient = new THREE.AmbientLight(0x8090a0, 0.6);
-scene.add(ambient);
-const sun = new THREE.DirectionalLight(0xfff5e8, 3.5);
-sun.position.set(10, 12, 5);
-sun.castShadow = true;
-sun.shadow.mapSize.set(2048, 2048);
-sun.shadow.camera.near = 0.5; sun.shadow.camera.far = 50;
-sun.shadow.camera.left = -15; sun.shadow.camera.right = 15;
-sun.shadow.camera.top = 15; sun.shadow.camera.bottom = -15;
-sun.shadow.bias = -0.0001;
-scene.add(sun);
-const hemi = new THREE.HemisphereLight(0x87ceeb, 0x3a5a2a, 0.3);
-scene.add(hemi);
+    window.addEventListener('mousemove', function(e) {
+        if (!isDown) return;
+        e.preventDefault();
+        var dx = (e.pageX - startX) * 5;
+        var newScroll = scrollStart - dx;
+        var maxScroll = container.scrollWidth - container.clientWidth;
+        container.scrollLeft = Math.max(0, Math.min(newScroll, maxScroll));
+    });
 
-// Ground
-const groundGeo = new THREE.CircleGeometry(12, 48);
-const groundMat = new THREE.MeshStandardMaterial({ color: 0x2a4a1a, roughness: 0.9 });
-const ground = new THREE.Mesh(groundGeo, groundMat);
-ground.rotation.x = -Math.PI/2;
-ground.position.y = -0.1;
-ground.receiveShadow = true;
-scene.add(ground);
-
-// Controls
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.target.set(0, 1.5, 0);
-controls.enableDamping = true;
-controls.dampingFactor = 0.08;
-controls.minDistance = 2.5;
-controls.maxDistance = 14;
-controls.maxPolarAngle = Math.PI * 0.55;
-controls.minPolarAngle = 0.25;
-controls.update();
-
-// Raycaster
-const raycaster = new THREE.Raycaster();
-const mouse = new THREE.Vector2();
-const clickables = [];
-let hoveredObj = null;
-const highlightColor = new THREE.Color(0xffffff);
-
-function setHighlight(obj, on) {
-  obj.traverse(child => {
-    if (child.isMesh && child.material && child.material.emissive) {
-      child.material._origEmissive = child.material._origEmissive || child.material.emissive.getHex();
-      child.material.emissive.set(on ? 0x332211 : child.material._origEmissive);
-      child.material.emissiveIntensity = on ? 0.5 : (child.material._origEmissiveIntensity || 0);
+    function snapToNearestPanel() {
+      var vw = window.innerWidth || document.documentElement.clientWidth;
+      var idx = Math.round(container.scrollLeft / vw);
+      var target = idx * vw;
+      container.scrollTo({ left: target, behavior: 'smooth' });
     }
-  });
-}
 
-canvas.addEventListener('mousemove', e => {
-  mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
-  raycaster.setFromCamera(mouse, camera);
-  const hits = raycaster.intersectObjects(clickables, true);
-  if (hits.length > 0) {
-    const obj = hits[0].object;
-    if (hoveredObj !== obj) {
-      if (hoveredObj) { canvas.style.cursor = 'grab'; setHighlight(hoveredObj, false); }
-      hoveredObj = obj;
-      canvas.style.cursor = 'pointer';
-      setHighlight(hoveredObj, true);
-    }
-  } else {
-    if (hoveredObj) { canvas.style.cursor = 'grab'; setHighlight(hoveredObj, false); hoveredObj = null; }
-  }
-});
+    window.addEventListener('mouseup', function() {
+        if (!isDown) return;
+        isDown = false;
+        if (scrollContent) scrollContent.classList.remove('grabbing');
+        container.style.userSelect = '';
+        snapToNearestPanel();
+    });
 
-canvas.addEventListener('click', e => {
-  if (e.target !== canvas) return;
-  raycaster.setFromCamera(mouse, camera);
-  const hits = raycaster.intersectObjects(clickables, true);
-  if (hits.length > 0) {
-    const obj = hits[0].object;
-    const card = document.getElementById('glass-card');
-    const title = document.getElementById('card-title');
-    const desc = document.getElementById('card-desc');
-    const tags = document.getElementById('card-tags');
-    const img = document.getElementById('card-img-placeholder');
+    window.addEventListener('mouseleave', function() {
+        if (!isDown) return;
+        isDown = false;
+        if (scrollContent) scrollContent.classList.remove('grabbing');
+        container.style.userSelect = '';
+        snapToNearestPanel();
+    });
 
-    if (obj.name.includes('House') || obj.name.includes('Roof') || obj.name.includes('Wall')) {
-      title.textContent = 'Forest Cabin';
-      desc.textContent = 'A cozy low-poly cabin nestled in the woods. Built with Blender and rendered in real-time with Three.js — every wooden plank and mossy roof tile tells a story of digital craftsmanship.';
-      tags.innerHTML = '<span style="padding:3px 10px;border-radius:12px;font-family:Inter,sans-serif;font-size:9px;letter-spacing:1px;background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.08);">Blender</span><span style="padding:3px 10px;border-radius:12px;font-family:Inter,sans-serif;font-size:9px;letter-spacing:1px;background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.08);">Three.js</span><span style="padding:3px 10px;border-radius:12px;font-family:Inter,sans-serif;font-size:9px;letter-spacing:1px;background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.08);">GLTF</span>';
-      img.innerHTML = '<div style="text-align:center;padding:40px;">🏠<br><span style="font-size:11px;letter-spacing:2px;">Forest Cabin Project</span></div>';
-    } else if (obj.name.includes('Tree') || obj.name.includes('Leaf')) {
-      title.textContent = 'Low-Poly Forest';
-      desc.textContent = 'Stylized low-poly trees with geometric foliage. The minimal aesthetic creates a serene atmosphere — proving that less polygons can mean more beauty.';
-      tags.innerHTML = '<span style="padding:3px 10px;border-radius:12px;font-family:Inter,sans-serif;font-size:9px;letter-spacing:1px;background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.08);">Low-Poly</span><span style="padding:3px 10px;border-radius:12px;font-family:Inter,sans-serif;font-size:9px;letter-spacing:1px;background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.08);">3D Art</span>';
-      img.innerHTML = '<div style="text-align:center;padding:40px;">🌲<br><span style="font-size:11px;letter-spacing:2px;">Forest Scene</span></div>';
-    } else {
-      title.textContent = '3D Discovery';
-      desc.textContent = 'You discovered a hidden detail in the 3D scene. Each element in this world was carefully placed to create an immersive woodland experience.';
-      tags.innerHTML = '<span style="padding:3px 10px;border-radius:12px;font-family:Inter,sans-serif;font-size:9px;letter-spacing:1px;background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.08);">3D</span><span style="padding:3px 10px;border-radius:12px;font-family:Inter,sans-serif;font-size:9px;letter-spacing:1px;background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.08);">Scene</span>';
-      img.innerHTML = '<div style="text-align:center;padding:40px;">✨<br><span style="font-size:11px;letter-spacing:2px;">Discover More</span></div>';
-    }
-    card.style.display = 'block';
-    card.style.animation = 'none';
-    card.offsetHeight;
-    card.style.animation = 'cardSlideIn 0.5s cubic-bezier(0.22,0.61,0.36,1)';
-  }
-});
+    // Nav dot + scene switch + progress bar
+    var navDots = document.querySelectorAll('.nav-bar a');
+    var bar = document.querySelector('.scroll-progress-bar');
 
-// Load model
-const loader = new GLTFLoader();
-loader.load('models/forest_house/scene.gltf', gltf => {
-  const model = gltf.scene;
-  model.scale.set(1, 1, 1);
-  model.position.set(0, 0, 0);
-  model.traverse(child => {
-    if (child.isMesh) {
-      child.castShadow = true;
-      child.receiveShadow = true;
-      clickables.push(child);
-      if (child.material) {
-        child.material._origEmissiveIntensity = child.material.emissiveIntensity || 0;
+    function updateAll() {
+      var sl = container.scrollLeft;
+      var vw = window.innerWidth || document.documentElement.clientWidth;
+      var idx = Math.round(sl / vw);
+      for (var i = 0; i < navDots.length; i++) {
+        navDots[i].classList.toggle('active', i === idx);
+        navDots[i].classList.toggle('inactive', i !== idx);
+      }
+      document.body.classList.toggle('scene-2', idx === 1);
+      document.body.classList.toggle('scene-3', idx === 2);
+      if (bar) {
+        var maxScroll = container.scrollWidth - container.clientWidth;
+        var pct = maxScroll > 0 ? (sl / maxScroll) * 100 : 0;
+        bar.style.width = Math.min(100, Math.max(0, pct)) + '%';
       }
     }
-  });
-  scene.add(model);
-  console.log('Model loaded: ' + clickables.length + ' clickable meshes');
-}, undefined, err => console.error('Model load error:', err));
 
-// Resize
-window.addEventListener('resize', () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-});
-
-// Render loop
-function animate() {
-  requestAnimationFrame(animate);
-  controls.update();
-  renderer.render(scene, camera);
-}
-animate();
+    container.addEventListener('scroll', updateAll);
+    updateAll();
+})();
 </script>
 </body>
 </html>
