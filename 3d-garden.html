@@ -203,7 +203,7 @@ window.addEventListener("keydown", (e) => { if (e.key === "Escape") closeCards()
 
 // ---- Load model ----
 // Use absolute URL to avoid importmap path resolution bug
-const modelUrl = new URL("./models/forest_house/scene.gltf", window.location.href).href;
+const modelUrl = "https://cdn.jsdelivr.net/gh/sy889c0der/sy889c0der.github.io@main/models/forest_house/scene.gltf";
 console.log("[3D] Loading model from:", modelUrl);
 
 const loader = new GLTFLoader();
