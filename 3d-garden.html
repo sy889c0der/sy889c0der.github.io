@@ -149,10 +149,13 @@ scene.add(sun);
 // ---- Controls ----
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enablePan = false;
+controls.enableZoom = false;
+controls.minDistance = 8;
+controls.maxDistance = 8;
+controls.autoRotate = true;
+controls.autoRotateSpeed = 1.0;
 controls.enableDamping = true;
 controls.dampingFactor = 0.08;
-controls.minDistance = 4;
-controls.maxDistance = 25;
 controls.maxPolarAngle = Math.PI * 0.7;
 controls.target.set(0, 2.5, 0);
 controls.update();
