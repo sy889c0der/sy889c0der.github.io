@@ -261,7 +261,7 @@ loader.load("./models/forest_house/scene.gltf", (gltf) => {
   loadingEl.classList.add("hidden");
   corsHelp.classList.add("show");
     const em = document.getElementById('err-msg');
-    if (em) em.innerHTML = Load failed:<br><code></code><br><br>Try opening with a VPN/proxy if in China.;
+    if (em) em.textContent = "Load failed: " + (err.message || err) + " - Try VPN/proxy if in China.";
 });
 
 // ---- Resize ----
