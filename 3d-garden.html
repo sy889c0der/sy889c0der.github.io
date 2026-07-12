@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -260,6 +260,8 @@ loader.load("./models/forest_house/scene.gltf", (gltf) => {
   console.error("[3D] Load failed:", err.message || err);
   loadingEl.classList.add("hidden");
   corsHelp.classList.add("show");
+    const em = document.getElementById('err-msg');
+    if (em) em.innerHTML = Load failed:<br><code></code><br><br>Try opening with a VPN/proxy if in China.;
 });
 
 // ---- Resize ----
