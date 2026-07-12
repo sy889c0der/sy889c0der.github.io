@@ -203,12 +203,13 @@ window.addEventListener("keydown", (e) => { if (e.key === "Escape") closeCards()
 
 // ---- Load model ----
 const loader = new GLTFLoader();
+// Model & textures loaded via jsDelivr CDN (faster in China)
 let loadTimer = setTimeout(() => {
   loadingEl.classList.add("hidden");
   corsHelp.classList.add("show");
 }, 30000);
 
-loader.load("./models/forest_house/scene.gltf", (gltf) => {
+loader.load("https://cdn.jsdelivr.net/gh/sy889c0der/sy889c0der.github.io@main/models/forest_house/scene.gltf", (gltf) => {
   clearTimeout(loadTimer);
   const model = gltf.scene;
   model.traverse((child) => {
