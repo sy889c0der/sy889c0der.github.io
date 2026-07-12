@@ -148,6 +148,7 @@ scene.add(sun);
 
 // ---- Controls ----
 const controls = new OrbitControls(camera, renderer.domElement);
+controls.enablePan = false;
 controls.enableDamping = true;
 controls.dampingFactor = 0.08;
 controls.minDistance = 4;
