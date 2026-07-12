@@ -203,13 +203,24 @@ window.addEventListener("keydown", (e) => { if (e.key === "Escape") closeCards()
 
 // ---- Load model ----
 const loader = new GLTFLoader();
-// Model & textures loaded via jsDelivr CDN (faster in China)
 let loadTimer = setTimeout(() => {
   loadingEl.classList.add("hidden");
   corsHelp.classList.add("show");
-}, 30000);
+  const em2 = document.getElementById("err-msg");
+  if (em2) em2.textContent = "Timeout: model took >30s to load. File may be too large or network too slow.";
+}, 60000);
 
-loader.load("https://cdn.jsdelivr.net/gh/sy889c0der/sy889c0der.github.io@main/models/forest_house/scene.gltf", (gltf) => {
+// First test if the model file is reachable
+fetch("./models/forest_house/scene.gltf", {method:"HEAD"}).then(r => {
+  console.log("[3D] Model file accessible, status:", r.status, "size:", r.headers.get("content-length"));
+  return r.ok;
+}).catch(() => false).then(ok => {
+  if (!ok) {
+    console.warn("[3D] Model file HEAD check failed, trying load anyway...");
+  }
+});
+
+loader.load("./models/forest_house/scene.gltf", (gltf) => {
   clearTimeout(loadTimer);
   const model = gltf.scene;
   model.traverse((child) => {
