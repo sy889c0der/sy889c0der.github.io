@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forest House · 3D</title>
+<style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:100%;height:100%;overflow:hidden;background:#1a1a2e;font-family:"PingFang SC","Microsoft YaHei",sans-serif;-webkit-font-smoothing:antialiased;user-select:none}
+  ::-webkit-scrollbar{display:none}
+  #c{display:block;position:fixed;inset:0;z-index:1}
+  #overlay{position:fixed;inset:0;z-index:2;pointer-events:none}
+
+  /* ---- Back button ---- */
+  #back-btn{
+    position:fixed;bottom:32px;left:32px;z-index:10;
+    display:flex;align-items:center;gap:10px;
+    padding:12px 20px;
+    background:rgba(30,30,50,0.55);
+    backdrop-filter:blur(18px) saturate(140%);
+    -webkit-backdrop-filter:blur(18px) saturate(140%);
+    border:1px solid rgba(255,255,255,0.15);
+    border-radius:14px;
+    color:rgba(255,255,255,0.85);
+    font-size:0.85rem;font-weight:500;letter-spacing:0.06em;
+    text-decoration:none;pointer-events:auto;
+    transition:all 0.35s ease;
+  }
+  #back-btn:hover{
+    background:rgba(40,40,60,0.7);
+    border-color:rgba(255,255,255,0.3);
+    color:#fff;
+    box-shadow:0 8px 30px rgba(0,0,0,0.4);
+    transform:translateY(-2px);
+  }
+  #back-btn .arr{font-size:1.1rem;transition:transform 0.3s}
+  #back-btn:hover .arr{transform:translateX(-3px)}
+
+  /* ---- Title ---- */
+  .garden-title{position:fixed;top:32px;left:36px;z-index:3;pointer-events:none}
+  .garden-title .gt-main{font-size:1.8rem;font-weight:700;color:#fff;letter-spacing:0.12em;text-shadow:0 2px 12px rgba(0,0,0,0.5);line-height:1.2}
+  .garden-title .gt-sub{font-size:0.65rem;font-weight:400;color:rgba(255,255,255,0.5);letter-spacing:0.25em}
+  .garden-title .gt-line{display:block;width:40px;height:1.5px;background:linear-gradient(90deg,#d4a574,transparent);margin-top:6px;border-radius:1px}
+
+  /* ---- Project Overlay ---- */
+  #project-overlay{
+    position:fixed;inset:0;z-index:50;
+    background:rgba(0,0,0,.35);
+    backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px);
+    display:flex;align-items:center;justify-content:center;
+    opacity:0;pointer-events:none;
+    transition:opacity .5s ease;
+  }
+  #project-overlay.active{opacity:1;pointer-events:auto}
+  #project-cards{
+    display:flex;gap:28px;align-items:center;justify-content:center;
+    flex-wrap:wrap;padding:40px;
+  }
+  .proj-card{
+    width:260px;min-height:320px;
+    background:rgba(25,30,50,.55);
+    backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:20px;padding:20px;
+    box-shadow:0 16px 40px rgba(0,0,0,.35);
+    color:#fff;text-align:center;
+    transition:transform .4s ease,box-shadow .4s ease;
+    animation:floatCard 5s ease-in-out infinite;
+    cursor:default;
+  }
+  .proj-card:hover{
+    transform:translateY(-8px) !important;
+    box-shadow:0 24px 56px rgba(0,0,0,.5),0 0 30px rgba(180,200,255,.08);
+  }
+  .proj-card:nth-child(1){animation-delay:0s;margin-top:-30px}
+  .proj-card:nth-child(2){animation-delay:-1.6s;margin-top:20px}
+  .proj-card:nth-child(3){animation-delay:-3.2s;margin-top:-15px}
+  .proj-card .pc-img{
+    width:100%;height:140px;border-radius:12px;
+    background:linear-gradient(135deg,rgba(100,140,200,.2),rgba(60,100,160,.1));
+    margin-bottom:16px;overflow:hidden;
+    display:flex;align-items:center;justify-content:center;
+    font-size:3rem;color:rgba(255,255,255,.25);
+  }
+  .proj-card .pc-img img{width:100%;height:100%;object-fit:cover}
+  .proj-card h3{
+    font-size:1rem;font-weight:600;letter-spacing:.03em;
+    margin-bottom:6px;font-family:'Playfair Display',Georgia,serif;
+  }
+  .proj-card p{
+    font-size:.75rem;line-height:1.6;color:rgba(255,255,255,.55);
+    letter-spacing:.02em;
+  }
+  .proj-card .pc-tag{
+    display:inline-block;margin-top:10px;padding:4px 12px;
+    background:rgba(255,255,255,.06);border-radius:20px;
+    font-size:.65rem;color:rgba(255,255,255,.4);letter-spacing:.05em;
+  }
+
+  @keyframes floatCard{
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(-14px)}
+  }
+
+  .overlay-hint{
+    position:fixed;bottom:40px;left:50%;transform:translateX(-50%);
+    z-index:51;color:rgba(255,255,255,.3);
+    font-size:.7rem;letter-spacing:.06em;
+    opacity:0;pointer-events:none;transition:opacity .5s;
+  }
+  #project-overlay.active ~ .overlay-hint{opacity:1}
+
+  /* ---- Loading ---- */
+  #loading{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#1a1a2e;transition:opacity .5s,visibility .5s}
+  #loading.hidden{opacity:0;visibility:hidden;pointer-events:none}
+  .lr{width:40px;height:40px;border:3px solid rgba(255,255,255,.1);border-top-color:#d4a574;border-radius:50%;animation:lspin .8s linear infinite}
+  @keyframes lspin{to{transform:rotate(360deg)}}
+  .lt{margin-top:16px;color:rgba(255,255,255,.6);font-size:.78rem;letter-spacing:.08em}
+
+  /* ---- Hint ---- */
+  #hint{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);z-index:3;pointer-events:none;color:rgba(255,255,255,.35);font-size:.7rem;letter-spacing:.06em;transition:opacity 1.2s}
+
+
+  /* ---- CORS / help modal ---- */
+  #cors-overlay{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.45);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+  #cors-overlay.show{display:flex}
+  .cors-modal{background:rgba(25,25,45,.72);backdrop-filter:blur(20px) saturate(140%);-webkit-backdrop-filter:blur(20px) saturate(140%);border:1px solid rgba(255,255,255,.14);border-radius:18px;padding:32px 28px 24px;max-width:420px;width:88%;text-align:center;color:#fff;box-shadow:0 20px 50px rgba(0,0,0,.45)}
+  .cors-modal .cm-icon{font-size:2.2rem;margin-bottom:12px;display:block}
+  .cors-modal h3{font-size:1rem;font-weight:600;letter-spacing:.04em;margin-bottom:10px}
+  .cors-modal p{font-size:.8rem;line-height:1.7;color:rgba(255,255,255,.65);margin-bottom:18px}
+  .cors-modal p code{background:rgba(255,255,255,.1);padding:2px 8px;border-radius:4px;font-size:.85em;color:#d4a574}
+  .cors-modal .cm-btn{display:inline-block;padding:8px 24px;background:rgba(212,165,116,.25);border:1px solid rgba(212,165,116,.4);border-radius:10px;color:#d4a574;font-size:.78rem;letter-spacing:.05em;cursor:pointer;transition:all .3s}
+  .cors-modal .cm-btn:hover{background:rgba(212,165,116,.4);color:#fff}
+
+  @media(max-width:640px){
+    .garden-title .gt-main{font-size:1.3rem}
+    #back-btn{bottom:20px;left:20px;padding:10px 16px}
+  }
+</style>
+</head>
+<body>
+
+<canvas id="c"></canvas>
+<div id="overlay"></div>
+
+<a id="back-btn" href="./index.html">
+  <span class="arr">&larr;</span> 返回主页
+</a>
+
+<div class="garden-title">
+  <span class="gt-main">Forest House</span>
+  <span class="gt-sub">3D IMMERSIVE EXPERIENCE</span>
+  <span class="gt-line"></span>
+</div>
+
+<div id="project-overlay">
+  <div id="project-cards">
+    <div class="proj-card" data-project="house">
+      <div class="pc-img">&#x1F3E0;</div>
+      <h3>Forest Cabin</h3>
+      <p>A cozy wooden retreat hidden among ancient redwoods, blending rustic charm with digital artistry.</p>
+      <span class="pc-tag">3D Design</span>
+    </div>
+    <div class="proj-card" data-project="forest">
+      <div class="pc-img">&#x1F332;</div>
+      <h3>Wilderness Scene</h3>
+      <p>Procedurally generated forest landscape with dynamic lighting, shadows, and interactive elements.</p>
+      <span class="pc-tag">Procedural</span>
+    </div>
+    <div class="proj-card" data-project="interaction">
+      <div class="pc-img">&#x1F3AE;</div>
+      <h3>Interactive 3D</h3>
+      <p>Raycaster-powered click detection, real-time orbit controls, and immersive spatial UI.</p>
+      <span class="pc-tag">Interaction</span>
+    </div>
+  </div>
+</div>
+<div class="overlay-hint">Click outside cards to close</div>
+
+<div id="loading">
+  <div class="lr"></div>
+  <div class="lt">Loading model...</div>
+</div>
+
+<div id="hint">Drag to rotate &nbsp;|&nbsp; Scroll to zoom &nbsp;|&nbsp; Click buildings for details</div>
+<div id="cors-overlay">
+  <div class="cors-modal">
+    <span class="cm-icon">&#128302;</span>
+    <h3>本地预览需使用 Live Server</h3>
+    <p>若已部署上线，模型将自动载入。<br><br><span style="font-size:.75rem;color:rgba(255,255,255,.4)">使用 <code>Live Server</code> 或 <code>python -m http.server</code> 启动本地服务即可</span></p>
+    <span class="cm-btn" onclick="document.getElementById('cors-overlay').classList.remove('show')">我知道了</span>
+  </div>
+</div>
+
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/" } }
+</script>
+
+<script type="module">
+// Dynamic import with CDN fallback
+let THREE,OrbitControls,GLTFLoader;
+try{
+  const [th,oc,gl] = await Promise.all([
+    import("three"),
+    import("three/addons/controls/OrbitControls.js"),
+    import("three/addons/loaders/GLTFLoader.js")
+  ]);
+  THREE=th;OrbitControls=oc.OrbitControls;GLTFLoader=gl.GLTFLoader;
+  console.log("[3D] Three.js loaded from CDN");
+}catch(e){
+  console.error("[3D] CDN import failed:",e.message);
+  document.getElementById("loading").classList.add("hidden");
+  document.getElementById("cors-overlay").classList.add("show");
+  // Stop execution — rest of code wrapped in this try
+  throw new Error("CDN_FAILED");
+}
+
+const canvas=document.getElementById("c");
+const overlay=document.getElementById("overlay");
+const loadingEl=document.getElementById("loading");
+const overlay=document.getElementById("project-overlay");
+const cards=document.getElementById("project-cards");
+
+canvas.addEventListener("click",(e)=>{
+  mouse.x=(e.clientX/innerWidth)*2-1;
+  mouse.y=-(e.clientY/innerHeight)*2+1;
+  raycaster.setFromCamera(mouse,camera);
+  const hits=raycaster.intersectObjects(clickable,false);
+  if(hits.length>0){
+    const info=findInfo(hits[0].object);
+    const cardEls=cards.querySelectorAll(".proj-card");
+    if(cardEls.length>=1){
+      const n=info?info.name:(hits[0].object.name||"Building");
+      const d=info?info.desc:"A structure in the forest, brought to life in 3D.";
+      cardEls[0].querySelector("h3").textContent=n;
+      cardEls[0].querySelector("p").textContent=d;
+      cardEls[0].querySelector(".pc-img").textContent=info?info.icon:"\u{1F3D7}";
+    }
+    overlay.classList.add("active");
+  }
+});
+
+overlay.addEventListener("click",(e)=>{
+  if(e.target===overlay)overlay.classList.remove("active");
+});
+
+addEventListener("keydown",(e)=>{if(e.key==="Escape")overlay.classList.remove("active")});
+
+const isGroundMesh=(child)=>{
+  const n=(child.name||"").toLowerCase();
+  const pn=(child.parent&&child.parent.name||"").toLowerCase();
+  return n.includes("groundplane")||pn==="groundplane"||(n.startsWith("ground_")&&!n.includes("grass"))||pn==="ground";
+};
+
+// ---- Protocol detection + timeout fallback ----
+if(location.protocol==="file:"){
+  loadingEl.classList.add("hidden");
+  corsWarn.classList.add("show");
+}else{
+console.log("[3D] Starting model load...");
+
+// Fallback: if model doesn't load within 10s, show help modal
+let loadTimer=setTimeout(()=>{
+  if(!loadingEl.classList.contains("hidden")){
+    loadingEl.classList.add("hidden");
+    corsWarn.classList.add("show");
+    console.warn("[3D] Model load timed out — showing help modal");
+  }
+},10000);
+
+const loader=new GLTFLoader();
+loader.load("./models/forest_house/scene.gltf",(gltf)=>{
+  clearTimeout(loadTimer);
+  console.log("[3D] Model file loaded, setting up scene...");
+  const model=gltf.scene;
+  model.traverse((child)=>{
+    if(child.isMesh){
+      const g=isGroundMesh(child);
+      child.castShadow=!g;
+      child.receiveShadow=true;
+      clickable.push(child);
+      if(child.material){
+        const mats=Array.isArray(child.material)?child.material:[child.material];
+        mats.forEach((mat)=>{mat.colorSpace=THREE.SRGBColorSpace;if(mat.map)mat.map.colorSpace=THREE.SRGBColorSpace;mat.needsUpdate=true});
+      }
+    }
+  });
+
+  const box=new THREE.Box3().setFromObject(model);
+  const center=box.getCenter(new THREE.Vector3());
+  const size=box.getSize(new THREE.Vector3());
+  model.scale.setScalar(22/Math.max(size.x,size.y,size.z));
+  model.updateWorldMatrix(true,false);
+  const sb=new THREE.Box3().setFromObject(model);
+  const sc=sb.getCenter(new THREE.Vector3());
+  const ss=sb.getSize(new THREE.Vector3());
+  model.position.sub(sc);
+  model.position.y+=ss.y*0.03;
+  scene.add(model);
+
+  const maxSDim=Math.max(ss.x,ss.y,ss.z);
+  const dist=maxSDim*0.75;
+  camera.position.set(dist*0.7,dist*0.45,dist*0.7);
+  controls.target.set(0,ss.y*0.35,0);
+  controls.update();
+
+  loadingEl.classList.add("hidden");
+  setTimeout(()=>{hint.style.opacity="0"},8000);
+  console.log("[3D] Model ready —",clickable.length,"clickable objects");
+},(progress)=>{
+  if(progress.total>0){
+    const pct=Math.round(progress.loaded/progress.total*100);
+    if(pct%20===0)console.log("[3D] Loading:",pct+"%");
+  }
+},(err)=>{
+  clearTimeout(loadTimer);
+  console.error("[3D] Load failed:",err.message||err);
+  loadingEl.classList.add("hidden");
+  corsWarn.classList.add("show");
+});
+} // end if(location.protocol!=="file:")
+
+
+function animate(){
+  requestAnimationFrame(animate);
+  controls.update();
+  renderer.render(scene,camera);
+}
+animate();
+</script>
+</body>
+</html>
