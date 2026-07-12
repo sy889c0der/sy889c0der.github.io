@@ -109,17 +109,17 @@ const cardsContainer = document.getElementById("cards");
 const corsHelp = document.getElementById("cors-help");
 
 // ---- Scene setup ----
-const scene = new THREE.Scene();
+const scene = new THREE.Scene(); window.scene = scene;
 scene.background = new THREE.Color("#0b132b");
 scene.fog = new THREE.Fog("#0b132b", 15, 50);
 
 const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.5, 100);
-camera.position.set(3, 2.5, 4);
+camera.position.set(3, 2.5, 4); window.camera = camera;
 
 const renderer = new THREE.WebGLRenderer({antialias:true});
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.shadowMap.enabled = true;
+renderer.shadowMap.enabled = true; window.renderer = renderer;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.2;
@@ -148,7 +148,7 @@ scene.add(sun);
 
 // ---- Controls ----
 const controls = new OrbitControls(camera, renderer.domElement);
-controls.enablePan = false;
+window.controls = controls; controls.enablePan = false;
 controls.enableZoom = false;
 controls.minDistance = 5;
 controls.maxDistance = 5;
