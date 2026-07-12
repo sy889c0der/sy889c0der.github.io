@@ -114,7 +114,7 @@ scene.background = new THREE.Color("#0b132b");
 scene.fog = new THREE.Fog("#0b132b", 15, 50);
 
 const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.5, 100);
-camera.position.set(17, 1.5, 17); window.camera = camera;
+camera.position.set(25, 1.0, 25); window.camera = camera;
 
 const renderer = new THREE.WebGLRenderer({antialias:true});
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -157,7 +157,7 @@ controls.autoRotateSpeed = 0.7;
 controls.enableDamping = true;
 controls.dampingFactor = 0.08;
 controls.maxPolarAngle = Math.PI * 0.7;
-controls.target.set(0, 0.8, 0);
+controls.target.set(0, 0.6, 0);
 controls.update();
 
 // ---- Clickable objects ----
@@ -254,8 +254,8 @@ loader.load(modelUrl, (gltf) => {
   // Adjust camera - human eye level, front view
   const s = box2.getSize(new THREE.Vector3());
   const d = Math.max(s.x, s.y, s.z) * 0.75;
-  camera.position.set(17, 1.5, 17);
-  controls.target.set(0, 0.8, 0);
+  camera.position.set(25, 1.0, 25);
+  controls.target.set(0, 0.6, 0);
   controls.update();
 
   loadingEl.classList.add("hidden");
