@@ -248,13 +248,13 @@ loader.load(modelUrl, (gltf) => {
   const center2 = box2.getCenter(new THREE.Vector3());
   model.position.sub(center2);
   // Lower model so door is at eye level for camera
-  model.position.y -= 1.5;
+  model.position.y -= 3;
   scene.add(model);
 
   // Adjust camera - human eye level, front view
   const s = box2.getSize(new THREE.Vector3());
   const d = Math.max(s.x, s.y, s.z) * 0.75;
-  camera.position.set(4, 1.2, 5);
+  camera.position.set(6, 1.5, 8);
   controls.target.set(0, 1.0, 0);
   controls.update();
 
