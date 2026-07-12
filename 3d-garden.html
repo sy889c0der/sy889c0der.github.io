@@ -114,7 +114,7 @@ scene.background = new THREE.Color("#0b132b");
 scene.fog = new THREE.Fog("#0b132b", 15, 50);
 
 const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.5, 100);
-camera.position.set(0, 4, 12);
+camera.position.set(0, 5, 10);
 
 const renderer = new THREE.WebGLRenderer({antialias:true});
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -153,11 +153,11 @@ controls.enableZoom = false;
 controls.minDistance = 8;
 controls.maxDistance = 8;
 controls.autoRotate = true;
-controls.autoRotateSpeed = 1.0;
+controls.autoRotateSpeed = 0.7;
 controls.enableDamping = true;
 controls.dampingFactor = 0.08;
 controls.maxPolarAngle = Math.PI * 0.7;
-controls.target.set(0, 2.5, 0);
+controls.target.set(0, 3.0, 0);
 controls.update();
 
 // ---- Clickable objects ----
