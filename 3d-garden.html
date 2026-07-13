@@ -69,7 +69,7 @@ canvas{display:block}
 @keyframes spotFloat{0%,100%{margin-top:-2px}50%{margin-top:2px}}
 #spot-inner{position:absolute;width:100vw;height:100vh}
 #spot-inner .sc{position:absolute;font-family:'Playfair Display','Cormorant Garamond','Georgia',serif;font-weight:700;letter-spacing:6px;white-space:nowrap;color:#fff;text-shadow:0 0 12px rgba(255,255,255,0.25)}
-.sc{text-align:center;display:flex;align-items:center;justify-content:center}.sc.xl{font-size:60px}.sc.lg{font-size:42px}.sc.md{font-size:28px}.sc.sm{font-size:18px}.sc.xs{font-size:13px}
+.sc{position:absolute;text-align:center;display:flex;align-items:center;justify-content:center;overflow:hidden;word-break:keep-all}.sc.xl{font-size:60px}.sc.lg{font-size:42px}.sc.md{font-size:28px}.sc.sm{font-size:18px}.sc.xs{font-size:13px}
 </style>
 </head>
 <body>
@@ -403,13 +403,12 @@ function syncSpotClones() {
     const r = el.getBoundingClientRect();
     const clone = spotInner.children[i];
     if (clone) {
-      // Match exact position and size of original text
+      // Fixed width container, content centered inside
       clone.style.left = (r.left - sr.left) + "px";
       clone.style.top = (r.top - sr.top) + "px";
       clone.style.width = r.width + "px";
       clone.style.height = r.height + "px";
-      clone.style.lineHeight = r.height + "px";
-      clone.style.textAlign = "center";
+      clone.style.lineHeight = "normal";
     }
   });
 }
