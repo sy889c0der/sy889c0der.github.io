@@ -51,10 +51,24 @@ canvas{display:block}
 .cors-box{background:rgba(25,30,50,.75);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:36px;text-align:center;color:#fff;max-width:440px}
 .cors-box h2{font-size:18px;margin-bottom:12px;letter-spacing:2px}
 .cors-box p{font-size:13px;color:rgba(255,255,255,.55);line-height:1.8}
+
+/* ---- Fixed background decorative text ---- */
+.bg-text{position:fixed;z-index:1;pointer-events:none;font-family:'Playfair Display','Georgia',serif;font-weight:100;font-size:clamp(48px,8vw,120px);color:rgba(255,255,255,0.12);letter-spacing:8px;white-space:nowrap;user-select:none}
+.bg-text.left{left:2%;top:15%;transform:rotate(-90deg);transform-origin:left top}
+.bg-text.right{right:2%;top:15%;transform:rotate(90deg);transform-origin:right top}
+.bg-text.l2{top:50%}
+.bg-text.l3{top:85%}
 </style>
 </head>
 <body>
 
+
+<div class="bg-text left">EXPLORE</div>
+<div class="bg-text left l2">DREAM</div>
+<div class="bg-text left l3">WANDER</div>
+<div class="bg-text right">WILDERNESS</div>
+<div class="bg-text right l2">NATURE</div>
+<div class="bg-text right l3">FOREST</div>
 <div id="loading">
   <div class="loader-ring"></div>
   <p>Loading 3D Model...</p>
@@ -248,34 +262,29 @@ loader.load(modelUrl, (gltf) => {
   // Lower model so door is at eye level for camera
   model.position.y = -5;
   scene.add(model); window.model = model;
-  // ---- Decorative text planes (fixed world-space, depth-occluded by model) ----
-  function createTextPlane(text, x, y, z, rx) {
+  // ---- Decorative 3D text planes (depth-occluded by rotating model) ----
+  function createTextPlane(text, x, y, z) {
     const canvas = document.createElement("canvas");
-    canvas.width = 1024; canvas.height = 200;
+    canvas.width = 1024; canvas.height = 256;
     const ctx = canvas.getContext("2d");
-    ctx.fillStyle = "rgba(255,255,255,0.18)";
-    ctx.font = "200 72px 'Playfair Display', 'Georgia', serif";
+    ctx.fillStyle = "rgba(255,255,255,0.25)";
+    ctx.font = "100 80px 'Playfair Display', 'Georgia', serif";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(text, 512, 100);
+    ctx.fillText(text, 512, 128);
     const tex = new THREE.CanvasTexture(canvas);
     tex.colorSpace = THREE.SRGBColorSpace;
     const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthTest: true, depthWrite: false, side: THREE.DoubleSide });
-    const plane = new THREE.Mesh(new THREE.PlaneGeometry(12, 3), mat);
+    const plane = new THREE.Mesh(new THREE.PlaneGeometry(14, 3.5), mat);
     plane.position.set(x, y, z);
-    // Subtle 3D rotation (lean back in X, face slightly inward in Y)
-    plane.rotation.x = THREE.MathUtils.degToRad(rx);
-    plane.rotation.y = x < 0 ? 0.25 : -0.25;
+    plane.rotation.x = THREE.MathUtils.degToRad(-8);
+    plane.rotation.y = x < 0 ? 0.2 : -0.2;
     scene.add(plane);
   }
-  // Left side - lean back slightly
-  createTextPlane("EXPLORE", -7.5, 2.0, 2.5, -5);
-  createTextPlane("NATURE", -7.5, 5.0, 1.5, -5);
-  createTextPlane("DREAM", -7.5, 8.0, 0.5, -5);
-  // Right side - lean back slightly
-  createTextPlane("WILDERNESS", 7.5, 2.0, 2.5, -5);
-  createTextPlane("WANDER", 7.5, 5.0, 1.5, -5);
-  createTextPlane("FOREST", 7.5, 8.0, 0.5, -5);
+  createTextPlane("EXPLORE", -8, 2.5, 1);
+  createTextPlane("DREAM", -8, 6.0, 0);
+  createTextPlane("WILDERNESS", 8, 2.5, 1);
+  createTextPlane("FOREST", 8, 6.0, 0);
 
 
   // Adjust camera - human eye level, front view
