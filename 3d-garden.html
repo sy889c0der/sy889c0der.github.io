@@ -52,10 +52,29 @@ canvas{display:block}
 .cors-box h2{font-size:18px;margin-bottom:12px;letter-spacing:2px}
 .cors-box p{font-size:13px;color:rgba(255,255,255,.55);line-height:1.8}
 
+
+/* ---- Fixed decorative text (CSS, never moves with camera) ---- */
+.deco-text{position:fixed;pointer-events:none;font-family:'Playfair Display','Georgia',serif;font-weight:100;letter-spacing:6px;white-space:nowrap;user-select:none;z-index:5}
+.deco-text.d1{font-size:80px;color:rgba(255,255,255,0.08)}
+.deco-text.d2{font-size:56px;color:rgba(255,255,255,0.12)}
+.deco-text.d3{font-size:36px;color:rgba(255,255,255,0.18)}
+.deco-text.d4{font-size:24px;color:rgba(255,255,255,0.24)}
+.deco-tl{position:fixed;pointer-events:none;font-family:'Playfair Display','Georgia',serif;font-weight:100;color:rgba(255,255,255,0.14);letter-spacing:4px;font-size:20px;white-space:nowrap;user-select:none;z-index:5;bottom:18%;left:6%}
+
 </style>
 </head>
 <body>
 
+
+
+<div class="deco-text d1" style="top:8%;left:3%">NATURE</div>
+<div class="deco-text d2" style="top:30%;left:1%">SILENCE</div>
+<div class="deco-text d3" style="top:55%;left:4%">ROOTS</div>
+<div class="deco-text d1" style="top:5%;right:3%">EXPLORE</div>
+<div class="deco-text d2" style="top:25%;right:2%">DREAM</div>
+<div class="deco-text d2" style="top:48%;right:1%">FOREST</div>
+<div class="deco-text d3" style="top:70%;right:4%">WANDER</div>
+<div class="deco-tl">Welcome to Songyu's Cabin</div>
 
 <div id="loading">
   <div class="loader-ring"></div>
@@ -250,51 +269,8 @@ loader.load(modelUrl, (gltf) => {
   // Lower model so door is at eye level for camera
   model.position.y = -5;
   scene.add(model); window.model = model;
-  // ═══════════ WELCOME SIGN (on house model, rotates with it) ═══════════
-  (() => {
-    const c = document.createElement("canvas"); c.width=1024; c.height=128;
-    const ctx = c.getContext("2d");
-    ctx.fillStyle = "rgba(255,255,255,0.5)";
-    ctx.font = "italic 300 40px 'Playfair Display','Georgia',serif";
-    ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    ctx.fillText("Welcome to Songyu's Cabin", 512, 64);
-    const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace;
-    const mat = new THREE.MeshBasicMaterial({ map:tex, transparent:true, depthTest:false, depthWrite:false, side:THREE.DoubleSide });
-    const plane = new THREE.Mesh(new THREE.PlaneGeometry(4, 0.5), mat);
-    plane.position.set(0, 1.5, 0);
-    plane.rotation.y = Math.PI;
-    model.add(plane);
-    window.welcomeSign = plane;
-    console.log("[3D] Welcome sign on house");
-  })();
-
-  // ═══════════ WORLD-SPACE DECORATIVE TEXT (static, occluded by model) ═══════════
-  function makeText(id, text, x, y, z, w, h, opacity, fontSize) {
-    const c = document.createElement("canvas"); c.width=1024; c.height=256;
-    const ctx = c.getContext("2d");
-    ctx.fillStyle = `rgba(255,255,255,${opacity})`;
-    ctx.font = `100 ${fontSize}px 'Playfair Display','Georgia',serif`;
-    ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    ctx.fillText(text, 512, 128);
-    const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace;
-    const mat = new THREE.MeshBasicMaterial({ map:tex, transparent:true, depthTest:true, depthWrite:false, side:THREE.DoubleSide });
-    const plane = new THREE.Mesh(new THREE.PlaneGeometry(w, h), mat);
-    plane.position.set(x, y, z);
-    scene.add(plane);
-    window[id] = plane;
-  }
-  // Left side: NATURE, SILENCE, ROOTS — varied depths & sizes
-  makeText("lt1", "NATURE",  -7.5, 1.0,  3.0, 12, 2.0, 0.12, 58);
-  makeText("lt2", "SILENCE", -7.0, 4.5,  1.5, 10, 1.6, 0.20, 46);
-  makeText("lt3", "ROOTS",   -8.0, 7.5,  0.0,  8, 1.3, 0.25, 38);
-  // Right side: EXPLORE, DREAM, FOREST, WANDER
-  makeText("rt1", "EXPLORE",    7.5, 1.2,  3.0, 13, 2.2, 0.11, 60);
-  makeText("rt2", "DREAM",      7.0, 3.8,  2.0,  9, 1.5, 0.22, 44);
-  makeText("rt3", "FOREST",     8.0, 6.2,  0.8, 10, 1.6, 0.18, 48);
-  makeText("rt4", "WANDER",     7.0, 8.5, -0.5,  8, 1.3, 0.26, 36);
-  console.log("[3D] 7 decorative text planes added. F12: window.lt1~lt3, window.rt1~rt4");
-
-  // Decorative text: removed for cleanup
+  // Decorative text: using CSS fixed positioning
+: removed for cleanup
 
 
 
