@@ -249,6 +249,28 @@ loader.load(modelUrl, (gltf) => {
   // Lower model so door is at eye level for camera
   model.position.y = -5;
   scene.add(model); window.model = model;
+  // ---- Decorative text planes (occluded by rotating trees) ----
+  function createTextPlane(text, x, rotY) {
+    const canvas = document.createElement("canvas");
+    canvas.width = 512; canvas.height = 128;
+    const ctx = canvas.getContext("2d");
+    ctx.fillStyle = "rgba(255,255,255,0.28)";
+    ctx.font = "300 64px 'Playfair Display', 'Georgia', serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(text, 256, 64);
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, side: THREE.DoubleSide });
+    const plane = new THREE.Mesh(new THREE.PlaneGeometry(10, 2.5), mat);
+    plane.position.set(x, 2.5, -2);
+    plane.rotation.y = rotY;
+    plane.renderOrder = 1;
+    scene.add(plane);
+  }
+  createTextPlane("EXPLORE", -8, 0.4);
+  createTextPlane("WILDERNESS", 8, -0.4);
+
 
   // Adjust camera - human eye level, front view
   const s = box2.getSize(new THREE.Vector3());
