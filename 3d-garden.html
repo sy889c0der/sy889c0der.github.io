@@ -254,18 +254,18 @@ loader.load(modelUrl, (gltf) => {
   const welcomeCanvas = document.createElement("canvas");
   welcomeCanvas.width = 1024; welcomeCanvas.height = 128;
   const wctx = welcomeCanvas.getContext("2d");
-  wctx.fillStyle = "rgba(255,255,255,0.4)";
+  wctx.fillStyle = "rgba(255,255,255,0.5)";
   wctx.font = "italic 300 42px 'Playfair Display', 'Georgia', serif";
   wctx.textAlign = "center"; wctx.textBaseline = "middle";
   wctx.fillText("Welcome to Songyu's Cabin", 512, 64);
   const wTex = new THREE.CanvasTexture(welcomeCanvas);
   wTex.colorSpace = THREE.SRGBColorSpace;
-  const wMat = new THREE.MeshBasicMaterial({ map: wTex, transparent: true, depthTest: true, depthWrite: false, side: THREE.DoubleSide });
+  const wMat = new THREE.MeshBasicMaterial({ map: wTex, transparent: true, depthTest: false, depthWrite: false, side: THREE.DoubleSide });
   const welcomePlane = new THREE.Mesh(new THREE.PlaneGeometry(4, 0.5), wMat);
-  // Position above door: model-local coords (scaled model center is origin)
-  welcomePlane.position.set(0, 0.8, 1.2);
-  welcomePlane.rotation.x = THREE.MathUtils.degToRad(-10);
+  welcomePlane.position.set(0, 1.5, 0);
+  welcomePlane.rotation.y = Math.PI;
   model.add(welcomePlane);
+  console.log("[3D] Welcome sign added to model at local (0,1.5,0)");
 
   // ---- Static world-space decorative text (scattered, varied sizes) ----
   function makeText(text, x, y, z, w, h, opacity, fontSize) {
