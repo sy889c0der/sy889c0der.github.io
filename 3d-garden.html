@@ -359,17 +359,41 @@ function animate() {
 }
 animate();
 
-// ---- Mini Spotlight (white clones inside black circle, physical occlusion) ----
+// ---- Mini Spotlight (Chinese translations inside black circle) ----
 const miniSpot = document.getElementById("mini-spot");
 const spotInner = document.getElementById("spot-inner");
 const allDt = document.querySelectorAll(".dt");
 let spotMX = -500, spotMY = -500, spotSX = -500, spotSY = -500;
 
-// Build clone of all decorative text inside spot-inner
+// Mapping: English text → Chinese translation
+const zhMap = {
+  "WILDERNESS":"旷野","SILENCE":"寂静","ROOTS":"根源","NATURE":"自然",
+  "DREAM":"梦境","SANCTUARY":"庇护所","WANDER":"漫游","FOREST":"森林",
+  "EXPLORE":"探索","WHISPER":"低语","RETURN":"归途",
+  "into the deep woods":"深入密林","a hidden refuge":"隐秘避难所",
+  "where roots drink from ancient earth":"根系汲取大地",
+  "beneath the canopy of stars":"繁星苍穹下",
+  "lost in the sound of wind":"迷失风中",
+  "cathedral of towering green":"绿色大教堂",
+  "footsteps on forgotten trails":"被遗忘的小径",
+  "the trees remember everything":"树木记得一切",
+  "MIST • PINE • SHADOW":"雾·松·影",
+  "MOSS • STONE • FERN":"苔·石·蕨",
+  "BARK • LEAF • DEW":"树皮·叶·露",
+  "RIVER • BRANCH • NEST":"河·枝·巢",
+  "TIMBER • HEARTH • SMOKE":"木·炉·烟",
+  "PEAK • CLOUD • HAWK":"峰·云·鹰",
+  "CREEK • HOLLOW • GLADE":"溪·谷·林",
+  "THORN • BLOOM • SEED":"刺·花·种"
+};
+
+// Build Chinese clones inside spot-inner
 allDt.forEach((el) => {
+  const en = el.textContent.trim();
+  const zh = zhMap[en] || en;
   const c = document.createElement("div");
   c.className = "sc " + Array.from(el.classList).filter(cl => cl !== "dt").join(" ");
-  c.textContent = el.textContent;
+  c.textContent = zh;
   spotInner.appendChild(c);
 });
 
