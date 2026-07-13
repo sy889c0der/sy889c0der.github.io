@@ -52,23 +52,11 @@ canvas{display:block}
 .cors-box h2{font-size:18px;margin-bottom:12px;letter-spacing:2px}
 .cors-box p{font-size:13px;color:rgba(255,255,255,.55);line-height:1.8}
 
-/* ---- Fixed background decorative text ---- */
-.bg-text{position:fixed;z-index:1;pointer-events:none;font-family:'Playfair Display','Georgia',serif;font-weight:100;font-size:clamp(48px,8vw,120px);color:rgba(255,255,255,0.12);letter-spacing:8px;white-space:nowrap;user-select:none}
-.bg-text.left{left:2%;top:15%;transform:rotate(-90deg);transform-origin:left top}
-.bg-text.right{right:2%;top:15%;transform:rotate(90deg);transform-origin:right top}
-.bg-text.l2{top:50%}
-.bg-text.l3{top:85%}
 </style>
 </head>
 <body>
 
 
-<div class="bg-text left">EXPLORE</div>
-<div class="bg-text left l2">DREAM</div>
-<div class="bg-text left l3">WANDER</div>
-<div class="bg-text right">WILDERNESS</div>
-<div class="bg-text right l2">NATURE</div>
-<div class="bg-text right l3">FOREST</div>
 <div id="loading">
   <div class="loader-ring"></div>
   <p>Loading 3D Model...</p>
@@ -262,29 +250,50 @@ loader.load(modelUrl, (gltf) => {
   // Lower model so door is at eye level for camera
   model.position.y = -5;
   scene.add(model); window.model = model;
-  // ---- Decorative 3D text planes (depth-occluded by rotating model) ----
-  function createTextPlane(text, x, y, z) {
-    const canvas = document.createElement("canvas");
-    canvas.width = 1024; canvas.height = 256;
-    const ctx = canvas.getContext("2d");
-    ctx.fillStyle = "rgba(255,255,255,0.25)";
-    ctx.font = "100 80px 'Playfair Display', 'Georgia', serif";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
+  // ---- Welcome sign (attached to model, rotates with house) ----
+  const welcomeCanvas = document.createElement("canvas");
+  welcomeCanvas.width = 1024; welcomeCanvas.height = 128;
+  const wctx = welcomeCanvas.getContext("2d");
+  wctx.fillStyle = "rgba(255,255,255,0.35)";
+  wctx.font = "italic 300 48px 'Playfair Display', 'Georgia', serif";
+  wctx.textAlign = "center"; wctx.textBaseline = "middle";
+  wctx.fillText("Welcome to Songyu's Cabin", 512, 64);
+  const wTex = new THREE.CanvasTexture(welcomeCanvas);
+  wTex.colorSpace = THREE.SRGBColorSpace;
+  const wMat = new THREE.MeshBasicMaterial({ map: wTex, transparent: true, depthTest: true, depthWrite: false, side: THREE.DoubleSide });
+  const welcomePlane = new THREE.Mesh(new THREE.PlaneGeometry(5, 0.6), wMat);
+  welcomePlane.position.set(0, 1.8, 2.5);
+  model.add(welcomePlane);
+
+  // ---- Static world-space decorative text (scattered, varied sizes) ----
+  function makeText(text, x, y, z, w, h, opacity, fontSize) {
+    const c = document.createElement("canvas");
+    c.width = 1024; c.height = 256;
+    const ctx = c.getContext("2d");
+    ctx.fillStyle = `rgba(255,255,255,${opacity})`;
+    ctx.font = `100 ${fontSize}px 'Playfair Display', 'Georgia', serif`;
+    ctx.textAlign = "center"; ctx.textBaseline = "middle";
     ctx.fillText(text, 512, 128);
-    const tex = new THREE.CanvasTexture(canvas);
+    const tex = new THREE.CanvasTexture(c);
     tex.colorSpace = THREE.SRGBColorSpace;
     const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthTest: true, depthWrite: false, side: THREE.DoubleSide });
-    const plane = new THREE.Mesh(new THREE.PlaneGeometry(14, 3.5), mat);
+    const plane = new THREE.Mesh(new THREE.PlaneGeometry(w, h), mat);
     plane.position.set(x, y, z);
-    plane.rotation.x = THREE.MathUtils.degToRad(-8);
-    plane.rotation.y = x < 0 ? 0.2 : -0.2;
+    plane.rotation.x = THREE.MathUtils.degToRad(-6);
+    plane.rotation.y = x < 0 ? 0.15 : -0.15;
     scene.add(plane);
   }
-  createTextPlane("EXPLORE", -8, 2.5, 1);
-  createTextPlane("DREAM", -8, 6.0, 0);
-  createTextPlane("WILDERNESS", 8, 2.5, 1);
-  createTextPlane("FOREST", 8, 6.0, 0);
+  // Left side - big faint / small crisp
+  makeText("EXPLORE", -8, 1.0, 3, 14, 2.5, 0.12, 64);
+  makeText("DREAM", -7, 4.5, 1, 8, 1.5, 0.18, 48);
+  makeText("WANDER", -9, 7.5, -1, 10, 1.8, 0.11, 56);
+  // Right side - mixed scales
+  makeText("WILDERNESS", 8, 1.5, 3, 15, 2.5, 0.12, 64);
+  makeText("NATURE", 7, 5.0, 1, 9, 1.6, 0.17, 50);
+  makeText("FOREST", 9, 8.0, -1, 11, 1.8, 0.11, 56);
+  // Far back - very faint, large
+  makeText("SANCTUARY", -3, 6.0, -5, 18, 2.8, 0.06, 72);
+  makeText("WILD", 4, 7.5, -5, 12, 2.0, 0.06, 68);
 
 
   // Adjust camera - human eye level, front view
