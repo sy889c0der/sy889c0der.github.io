@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -212,9 +212,7 @@
 <div id="leaf-cursor"></div>
 <div class="scroll-progress-bar"></div>
 
-<script type="importmap">
-{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
-</script>
+
 <script>
 // Forest Engine v2 - Shared across all enhanced pages
 // Adds: stars, fog, day/night, bird flocks, rain
@@ -925,15 +923,15 @@ document.addEventListener('DOMContentLoaded', () => Forest.init());
 
 </script>
 
-  <canvas id="three-canvas" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:1;"></canvas>
+  
   <!-- SPOTLIGHT BLACK CIRCLE -->
   <div id="spotlight">
     <div class="spotlight-inner">
-      <h1 class="hero-title" style="color:#fff;text-shadow:none;font-size:clamp(28px,5vw,70px)">浣犲ソ锛屾垜鏄畫瀹?/h1>
+      <h1 class="hero-title" style="color:#fff;text-shadow:none;font-size:clamp(28px,5vw,70px)">你好，我是宋宇/h1>
       <div class="hero-line" style="background:rgba(255,255,255,0.4)"></div>
-      <p class="hero-sub" style="color:rgba(255,255,255,0.6);text-shadow:none;font-size:13px">鏁板瓧濯掍綋鑹烘湳鐨勪竴鍚嶅皬鍙埍</p>
+      <p class="hero-sub" style="color:rgba(255,255,255,0.6);text-shadow:none;font-size:13px">数字媒体艺术的一名小可爱</p>
     </div>
-      <div class="s-sub">鏁板瓧濯掍綋鑹烘湳鐨勪竴鍚嶅皬鍙埍</div>
+      <div class="s-sub">数字媒体艺术的一名小可爱</div>
     </div>
   </div>
 <script>
@@ -1079,183 +1077,7 @@ document.addEventListener('DOMContentLoaded', () => Forest.init());
 
 <script type="module">
 // ==================== 3D Forest House ====================
-import * as THREE from "three";
-import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
-(function(){
-const canvas=document.getElementById("three-canvas");
-if(!canvas)return;
-
-const scene=new THREE.Scene();
-/* scene.background removed - let forest-engine canvas show through */
-scene.fog=new THREE.Fog(0x1a1a2e,35,90);
-
-const camera=new THREE.PerspectiveCamera(50,2,0.5,500);
-camera.position.set(18,10,22);
-
-const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
-renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-renderer.shadowMap.enabled=true;
-renderer.shadowMap.type=THREE.PCFSoftShadowMap;
-renderer.toneMapping=THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure=0.9;
-renderer.outputColorSpace=THREE.SRGBColorSpace;
-
-function resize(){
-  const w=innerWidth,h=innerHeight;
-  if(!w||!h)return;
-  renderer.setSize(w,h);
-  camera.aspect=w/h;
-  camera.updateProjectionMatrix();
-}
-resize();
-addEventListener("resize",resize);
-
-scene.add(new THREE.AmbientLight(0x8899bb,0.8));
-scene.add(new THREE.HemisphereLight(0xddeeff,0x3a2f1f,0.5));
-
-const sun=new THREE.DirectionalLight(0xffeedd,4);
-sun.position.set(25,30,10);
-sun.castShadow=true;
-sun.shadow.mapSize.width=2048;
-sun.shadow.mapSize.height=2048;
-sun.shadow.camera.near=0.5;
-sun.shadow.camera.far=150;
-sun.shadow.camera.left=-30;
-sun.shadow.camera.right=30;
-sun.shadow.camera.top=30;
-sun.shadow.camera.bottom=-30;
-sun.shadow.bias=-0.0004;
-sun.shadow.normalBias=0.02;
-scene.add(sun);
-
-const fill=new THREE.DirectionalLight(0x8899cc,1);
-fill.position.set(-15,5,-8);
-scene.add(fill);
-
-const controls=new OrbitControls(camera,renderer.domElement);
-controls.target.set(0,2.5,0);
-controls.enableDamping=true;
-controls.dampingFactor=0.08;
-controls.minDistance=5;
-controls.maxDistance=60;
-controls.maxPolarAngle=Math.PI*0.48;
-controls.minPolarAngle=0.2;
-controls.update();
-
-const buildingInfo={
-  House:{icon:"\u{1F3E0}",name:"Forest Cabin",desc:"A cozy wooden cabin hidden deep in the forest."},
-  HouseFence:{icon:"\u{1FAB5}",name:"Front Fence",desc:"A small fence woven from branches and twigs."},
-  Stairs:{icon:"\u{1FA9C}",name:"Wooden Steps",desc:"Ancient wooden steps leading to the cabin entrance."},
-  RoofMoss:{icon:"\u{1F33F}",name:"Moss Roof",desc:"Emerald moss blankets the sloped roof."},
-  Chimney:{icon:"\u{1F525}",name:"Stone Chimney",desc:"A chimney stacked with river pebbles."},
-  Windows:{icon:"\u{1FA9F}",name:"Wooden Windows",desc:"Handcrafted wooden frames with bright glass."},
-  BTree:{icon:"\u{1F333}",name:"Birch Trees",desc:"Silver-barked birches encircle the cabin."},
-  Redwood:{icon:"\u{1F332}",name:"Redwood",desc:"Towering redwoods stand like silent giants."},
-  Rocks:{icon:"\u{1FAA8}",name:"Forest Boulders",desc:"Giant moss-covered boulders in the woods."},
-  Ground:{icon:"\u{1F342}",name:"Forest Floor",desc:"Soft moss and fallen leaves blanket the earth."},
-  Bird:{icon:"\u{1F426}",name:"Forest Bird",desc:"A colorful bird perches on a branch."},
-  Racoon:{icon:"\u{1F99D}",name:"Raccoon",desc:"A curious little raccoon looks around."},
-};
-
-function findInfo(obj){
-  let cur=obj;
-  while(cur){
-    const n=cur.name||"";
-    if(buildingInfo[n])return buildingInfo[n];
-    const bn=n.replace(/\.\d+$/,"");
-    if(buildingInfo[bn])return buildingInfo[bn];
-    for(const[k,v]of Object.entries(buildingInfo)){
-      if(n.includes(k)||k.includes(bn))return v;
-    }
-    cur=cur.parent;
-  }
-  return null;
-}
-
-const raycaster=new THREE.Raycaster();
-const mouse=new THREE.Vector2();
-let clickable=[];
-
-// Popup elements
-const popup=document.createElement("div");
-popup.innerHTML='<div style="background:rgba(30,30,50,.62);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.16);border-radius:18px;padding:28px 24px 20px;box-shadow:0 20px 50px rgba(0,0,0,.4);color:#fff;text-align:center;max-width:380px"><span class="pi" style="font-size:2rem;display:block;margin-bottom:8px"></span><h3 style="font-size:1.15rem;font-weight:700;margin-bottom:6px"></h3><p style="font-size:.82rem;line-height:1.65;color:rgba(255,255,255,.72)"></p><span style="display:inline-block;margin-top:12px;font-size:.65rem;color:rgba(255,255,255,.35)">Click empty space to close</span></div>';
-popup.style.cssText="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.9);z-index:999;pointer-events:none;opacity:0;transition:opacity .35s,transform .35s cubic-bezier(.34,1.56,.64,1)";
-document.body.appendChild(popup);
-const pi=popup.querySelector(".pi"),pt=popup.querySelector("h3"),pd=popup.querySelector("p");
-let popupActive=false;
-
-canvas.addEventListener("click",(e)=>{
-  mouse.x=(e.clientX/innerWidth)*2-1;
-  mouse.y=-(e.clientY/innerHeight)*2+1;
-  raycaster.setFromCamera(mouse,camera);
-  const hits=raycaster.intersectObjects(clickable,false);
-  if(hits.length>0){
-    const info=findInfo(hits[0].object);
-    if(info){pi.textContent=info.icon;pt.textContent=info.name;pd.textContent=info.desc}
-    else{pi.textContent="\u{1F3D7}";pt.textContent=hits[0].object.name||"Building";pd.textContent="A structure in the forest."}
-    popup.style.opacity="1";popup.style.pointerEvents="auto";popup.style.transform="translate(-50%,-50%) scale(1)";
-    popupActive=true;
-  }else if(popupActive){
-    popup.style.opacity="0";popup.style.pointerEvents="none";popup.style.transform="translate(-50%,-50%) scale(0.9)";
-    popupActive=false;
-  }
-});
-
-addEventListener("keydown",(e)=>{if(e.key==="Escape"&&popupActive){popup.style.opacity="0";popup.style.pointerEvents="none";popup.style.transform="translate(-50%,-50%) scale(0.9)";popupActive=false}});
-
-const isGroundMesh=(child)=>{
-  const n=(child.name||"").toLowerCase();
-  const pn=(child.parent&&child.parent.name||"").toLowerCase();
-  return n.includes("groundplane")||pn==="groundplane"||(n.startsWith("ground_")&&!n.includes("grass"))||pn==="ground";
-};
-
-if(location.protocol==="file:"){
-  console.log("[3D] File protocol - skipping model load");
-}else{
-  const loader=new GLTFLoader();
-  loader.load("./models/forest_house/scene.gltf",(gltf)=>{
-    const model=gltf.scene;
-    model.traverse((child)=>{
-      if(child.isMesh){
-        const g=isGroundMesh(child);
-        child.castShadow=!g;
-        child.receiveShadow=true;
-        clickable.push(child);
-        if(child.material){
-          const mats=Array.isArray(child.material)?child.material:[child.material];
-          mats.forEach((mat)=>{mat.colorSpace=THREE.SRGBColorSpace;if(mat.map)mat.map.colorSpace=THREE.SRGBColorSpace;mat.needsUpdate=true});
-        }
-      }
-    });
-    const box=new THREE.Box3().setFromObject(model);
-    const size=box.getSize(new THREE.Vector3());
-    model.scale.setScalar(22/Math.max(size.x,size.y,size.z));
-    model.updateWorldMatrix(true,false);
-    const sb=new THREE.Box3().setFromObject(model);
-    const sc=sb.getCenter(new THREE.Vector3());
-    const ss=sb.getSize(new THREE.Vector3());
-    model.position.sub(sc);
-    model.position.y+=ss.y*0.03;
-    scene.add(model);
-    const maxSDim=Math.max(ss.x,ss.y,ss.z);
-    const dist=maxSDim*0.75;
-    camera.position.set(dist*0.7,dist*0.45,dist*0.7);
-    controls.target.set(0,ss.y*0.35,0);
-    controls.update();
-    console.log("[3D] Model loaded:",clickable.length,"objects");
-  },undefined,(err)=>{console.error("[3D] Load failed:",err.message||err)});
-}
-
-function animate(){
-  requestAnimationFrame(animate);
-  controls.update();
-  renderer.render(scene,camera);
-}
-animate();
-})();
-</script>
 
 </body>
 </html>
