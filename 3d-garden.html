@@ -114,7 +114,7 @@ scene.background = new THREE.Color("#0b132b");
 scene.fog = new THREE.Fog("#0b132b", 15, 50);
 
 const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.5, 100);
-camera.position.set(20, 1.0, 20); window.camera = camera;
+camera.position.set(15, 1.0, 15); window.camera = camera;
 
 const renderer = new THREE.WebGLRenderer({antialias:true});
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -253,7 +253,7 @@ loader.load(modelUrl, (gltf) => {
   // Adjust camera - human eye level, front view
   const s = box2.getSize(new THREE.Vector3());
   const d = Math.max(s.x, s.y, s.z) * 0.75;
-  camera.position.set(20, 1.0, 20);
+  camera.position.set(15, 1.0, 15);
   controls.target.set(0, 0.4, 0);
   controls.update();
 
