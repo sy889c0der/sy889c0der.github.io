@@ -248,33 +248,33 @@ loader.load(modelUrl, (gltf) => {
   // Lower model so door is at eye level for camera
   model.position.y = -5;
   scene.add(model); window.model = model;
-  // ---- Decorative text planes (fixed in world space, not rotating with model) ----
+  // ---- Decorative text planes (fixed world-space, depth-occluded by model) ----
   function createTextPlane(text, x, y, z, tilt) {
     const canvas = document.createElement("canvas");
     canvas.width = 1024; canvas.height = 200;
     const ctx = canvas.getContext("2d");
-    ctx.fillStyle = "rgba(255,255,255,0.2)";
+    ctx.fillStyle = "rgba(255,255,255,0.15)";
     ctx.font = "200 72px 'Playfair Display', 'Georgia', serif";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillText(text, 512, 100);
     const tex = new THREE.CanvasTexture(canvas);
     tex.colorSpace = THREE.SRGBColorSpace;
-    const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, side: THREE.DoubleSide });
+    // depthTest:true (default) + depthWrite:false = occluded by closer objects
+    const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthTest: true, depthWrite: false, side: THREE.DoubleSide });
     const plane = new THREE.Mesh(new THREE.PlaneGeometry(12, 3), mat);
     plane.position.set(x, y, z);
     plane.rotation.z = THREE.MathUtils.degToRad(tilt);
-    plane.renderOrder = 1;
+    // No renderOrder override - uses default depth sorting
     scene.add(plane);
   }
-  // Left side
-  createTextPlane("EXPLORE", -9, 1.5, -1, -12);
-  createTextPlane("NATURE", -9, 4.5, -2, -12);
-  createTextPlane("DREAM", -9, 7.5, -3, -12);
-  // Right side
-  createTextPlane("WILDERNESS", 9, 1.5, -1, -12);
-  createTextPlane("WANDER", 9, 4.5, -2, -12);
-  createTextPlane("FOREST", 9, 7.5, -3, -12);
+  // Positioned in tree gaps so model sweeps across them
+  createTextPlane("EXPLORE", -7, 2.0, 2, -12);
+  createTextPlane("NATURE", -7, 5.0, 1, -12);
+  createTextPlane("DREAM", -7, 8.0, 0, -12);
+  createTextPlane("WILDERNESS", 7, 2.0, 2, -12);
+  createTextPlane("WANDER", 7, 5.0, 1, -12);
+  createTextPlane("FOREST", 7, 8.0, 0, -12);
 
 
   // Adjust camera - human eye level, front view
