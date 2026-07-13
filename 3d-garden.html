@@ -250,52 +250,8 @@ loader.load(modelUrl, (gltf) => {
   // Lower model so door is at eye level for camera
   model.position.y = -5;
   scene.add(model); window.model = model;
-  // ---- Welcome sign (attached to model, rotates with house) ----
-  const welcomeCanvas = document.createElement("canvas");
-  welcomeCanvas.width = 1024; welcomeCanvas.height = 128;
-  const wctx = welcomeCanvas.getContext("2d");
-  wctx.fillStyle = "rgba(255,255,255,0.5)";
-  wctx.font = "italic 300 42px 'Playfair Display', 'Georgia', serif";
-  wctx.textAlign = "center"; wctx.textBaseline = "middle";
-  wctx.fillText("Welcome to Songyu's Cabin", 512, 64);
-  const wTex = new THREE.CanvasTexture(welcomeCanvas);
-  wTex.colorSpace = THREE.SRGBColorSpace;
-  const wMat = new THREE.MeshBasicMaterial({ map: wTex, transparent: true, depthTest: false, depthWrite: false, side: THREE.DoubleSide });
-  const welcomePlane = new THREE.Mesh(new THREE.PlaneGeometry(4, 0.5), wMat);
-  welcomePlane.position.set(0, 1.5, 0);
-  welcomePlane.rotation.y = Math.PI;
-  model.add(welcomePlane);
-  console.log("[3D] Welcome sign added to model at local (0,1.5,0)");
+  // Decorative text: removed for cleanup
 
-  // ---- Static world-space decorative text (scattered, varied sizes) ----
-  function makeText(text, x, y, z, w, h, opacity, fontSize) {
-    const c = document.createElement("canvas");
-    c.width = 1024; c.height = 256;
-    const ctx = c.getContext("2d");
-    ctx.fillStyle = `rgba(255,255,255,${opacity})`;
-    ctx.font = `100 ${fontSize}px 'Playfair Display', 'Georgia', serif`;
-    ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    ctx.fillText(text, 512, 128);
-    const tex = new THREE.CanvasTexture(c);
-    tex.colorSpace = THREE.SRGBColorSpace;
-    const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthTest: true, depthWrite: false, side: THREE.DoubleSide });
-    const plane = new THREE.Mesh(new THREE.PlaneGeometry(w, h), mat);
-    plane.position.set(x, y, z);
-    plane.rotation.x = THREE.MathUtils.degToRad(-6);
-    plane.rotation.y = x < 0 ? 0.15 : -0.15;
-    scene.add(plane);
-  }
-  // Left side - big faint / small crisp
-  makeText("EXPLORE", -8, 1.0, 3, 14, 2.5, 0.12, 64);
-  makeText("DREAM", -7, 4.5, 1, 8, 1.5, 0.18, 48);
-  makeText("WANDER", -9, 7.5, -1, 10, 1.8, 0.11, 56);
-  // Right side - mixed scales
-  makeText("WILDERNESS", 8, 1.5, 3, 15, 2.5, 0.12, 64);
-  makeText("NATURE", 7, 5.0, 1, 9, 1.6, 0.17, 50);
-  makeText("FOREST", 9, 8.0, -1, 11, 1.8, 0.11, 56);
-  // Far back - very faint, large
-  makeText("SANCTUARY", -3, 6.0, -5, 18, 2.8, 0.06, 72);
-  makeText("WILD", 4, 7.5, -5, 12, 2.0, 0.06, 68);
 
 
   // Adjust camera - human eye level, front view
