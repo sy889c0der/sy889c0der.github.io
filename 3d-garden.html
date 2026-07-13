@@ -63,13 +63,15 @@ canvas{display:block}
 .dt.xs{font-size:13px;color:rgba(255,255,255,0.26)}
 
 
-/* ---- Mini Spotlight Circle ---- */
-#mini-spot{position:fixed;z-index:999;pointer-events:none;width:170px;height:170px;border-radius:50%;background:#0b132b;transform:translate(-50%,-50%);opacity:0;transition:opacity 0.3s;overflow:hidden;animation:spotFloat 6s ease-in-out infinite;box-shadow:0 0 0 1px rgba(255,255,255,0.06)}
+/* ---- Mini Spotlight (mirrors index.html logic) ---- */
+#mini-spot{position:fixed;z-index:999;pointer-events:none;width:170px;height:170px;border-radius:50%;background:#000;transform:translate(-50%,-50%);opacity:0;transition:opacity 0.2s;overflow:hidden;animation:spotFloat 4s ease-in-out infinite}
 #mini-spot.show{opacity:1}
 @keyframes spotFloat{0%,100%{margin-top:-3px}50%{margin-top:3px}}
-.mini-spot-inner{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%}
-.mini-spot-inner .ms-word{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#fff;opacity:0.7;letter-spacing:2px}
-.mini-spot-inner .ms-dot{width:4px;height:4px;background:rgba(255,255,255,0.3);border-radius:50%;margin:4px 0}
+.spot-clone{position:fixed;z-index:998;pointer-events:none;font-family:'Playfair Display','Cormorant Garamond','Georgia',serif;font-weight:700;letter-spacing:6px;white-space:nowrap;color:#fff;opacity:0.7;text-shadow:0 0 8px rgba(255,255,255,0.15)}
+.spot-clone.xl{font-size:60px}
+.spot-clone.lg{font-size:42px}
+.spot-clone.md{font-size:28px}
+.spot-clone.sm{font-size:18px}
 </style>
 </head>
 <body>
@@ -105,14 +107,7 @@ canvas{display:block}
 <div class="dt sm" style="top:82%;right:4%">THORN &bull; BLOOM &bull; SEED</div>
 <div class="dt md" style="top:90%;right:1%">RETURN</div>
 
-
-<div id="mini-spot">
-  <div class="mini-spot-inner">
-    <span class="ms-word">旷野</span>
-    <div class="ms-dot"></div>
-    <span class="ms-word">森林</span>
-  </div>
-</div>
+<div id="mini-spot"></div>
 <div id="loading">
   <div class="loader-ring"></div>
   <p>Loading 3D Model...</p>
@@ -366,18 +361,46 @@ function animate() {
 }
 animate();
 
-// ---- Mini Spotlight ----
+// ---- Mini Spotlight (clones decorative text in white) ----
 const miniSpot = document.getElementById("mini-spot");
-let msx = -500, msy = -500, smoothX = -500, smoothY = -500;
-document.addEventListener("mousemove", (e) => { msx = e.clientX; msy = e.clientY; miniSpot.classList.add("show"); });
-document.addEventListener("mouseleave", () => miniSpot.classList.remove("show"));
-function spotAnim() {
-  requestAnimationFrame(spotAnim);
-  smoothX += (msx - smoothX) * 0.1;
-  smoothY += (msy - smoothY) * 0.1;
-  miniSpot.style.left = smoothX + "px";
-  miniSpot.style.top = smoothY + "px";
+const allDt = document.querySelectorAll(".dt");
+let spotMX = -500, spotMY = -500, spotSX = -500, spotSY = -500;
+
+// Create cloned text elements positioned over each decorative text
+const clones = [];
+allDt.forEach((el) => {
+  const c = el.cloneNode(true);
+  c.className = "spot-clone " + Array.from(el.classList).filter(cl => cl !== "dt").join(" ");
+  c.textContent = el.textContent; // Keep English, or map to Chinese
+  document.body.appendChild(c);
+  clones.push({ orig: el, clone: c });
+});
+
+function updateClones() {
+  clones.forEach(({ orig, clone }) => {
+    const r = orig.getBoundingClientRect();
+    clone.style.left = r.left + "px";
+    clone.style.top = r.top + "px";
+  });
 }
-spotAnim();</script>
+
+document.addEventListener("mousemove", (e) => {
+  spotMX = e.clientX; spotMY = e.clientY;
+  miniSpot.classList.add("show");
+});
+document.addEventListener("mouseleave", () => miniSpot.classList.remove("show"));
+window.addEventListener("resize", updateClones);
+window.addEventListener("scroll", updateClones);
+
+function spotLoop() {
+  requestAnimationFrame(spotLoop);
+  spotSX += (spotMX - spotSX) * 0.12;
+  spotSY += (spotMY - spotSY) * 0.12;
+  miniSpot.style.left = spotSX + "px";
+  miniSpot.style.top = spotSY + "px";
+  updateClones();
+}
+setTimeout(updateClones, 500);
+spotLoop();</script>
 </body>
 </html>
